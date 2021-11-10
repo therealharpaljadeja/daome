@@ -11,6 +11,7 @@ const theme = extendTheme({
 		global: {
 			body: {
 				fontFamily: "Archivo",
+				color: "brand.500",
 			},
 		},
 	},
