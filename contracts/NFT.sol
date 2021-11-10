@@ -12,11 +12,14 @@ contract NFT is ERC721Enumerable, Ownable {
     mapping(uint256 => string) _tokenURIs;
     mapping(uint256 => uint256) _royalties;
 
-    constructor(string memory collectionName, string memory collectionSymbol) ERC721(collectionName, collectionSymbol) {
-        
-    }
+    constructor(string memory collectionName, string memory collectionSymbol)
+        ERC721(collectionName, collectionSymbol)
+    {}
 
-    function createToken(string memory _tokenURI, uint256 royaltyPercentage) public returns (uint) {
+    function createToken(string memory _tokenURI, uint256 royaltyPercentage)
+        public
+        returns (uint256)
+    {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
 
@@ -26,28 +29,43 @@ contract NFT is ERC721Enumerable, Ownable {
         return newItemId;
     }
 
-   
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
         return _tokenURIs[tokenId];
     }
 
-    function supportsInterface(bytes4 interfaceId) public view override returns (bool) {
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override
+        returns (bool)
+    {
         return ERC721Enumerable.supportsInterface(interfaceId);
     }
 
-    function isApprovedToMarketplace(address spender, uint256 tokenId) public view returns (bool) {
+    function isApprovedToMarketplace(address spender, uint256 tokenId)
+        public
+        view
+        returns (bool)
+    {
         return _isApprovedOrOwner(spender, tokenId);
     }
 
-    function withdraw() onlyOwner external {
+    function withdraw() external onlyOwner {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function getRoyaltyPercentage(uint256 tokenId) external view returns (uint256) {
+    function getRoyaltyPercentage(uint256 tokenId)
+        external
+        view
+        returns (uint256)
+    {
         return _royalties[tokenId];
-    } 
+    }
 
-    receive() external payable {
-
-    } 
+    receive() external payable {}
 }

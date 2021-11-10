@@ -1,32 +1,45 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 
-async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
-
-  // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
-
-  await greeter.deployed();
-
-  console.log("Greeter deployed to:", greeter.address);
+async function getDeployerBalance(deployer) {
+	return `Deployer Balance: ${hre.ethers.utils.formatEther(
+		await deployer.getBalance()
+	)}`;
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
+async function main() {
+	const testnetAccount = await hre.reef.getSignerByName("testnet_account");
+	await testnetAccount.claimDefaultAccount();
+
+	console.log(`Deploying using address: ${testnetAccount._substrateAddress}`);
+
+	console.log(await getDeployerBalance(testnetAccount));
+
+	console.log("Deploying Marketplace Contract");
+	const NFTMarket = await hre.reef.getContractFactory(
+		"NFTMarket",
+		testnetAccount
+	);
+	const nftMarket = await NFTMarket.deploy();
+	await nftMarket.deployed();
+
+	console.log(await getDeployerBalance(testnetAccount));
+	console.log(`Marketplace Deployed at ${nftMarket.address}`);
+
+	console.log("Deploying Creators Contract");
+	const Creators = await hre.reef.getContractFactory(
+		"Creators",
+		testnetAccount
+	);
+	const creators = await Creators.deploy(nftMarket.address);
+	await creators.deployed();
+	console.log(`Creators deployed at ${creators.address}`);
+
+	console.log(await getDeployerBalance(testnetAccount));
+}
+
 main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+	.then(() => process.exit(0))
+	.catch((error) => {
+		console.error(error);
+		process.exit(1);
+	});

@@ -5,8 +5,7 @@ import "./NFT.sol";
 import "./Token.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-
-contract Creator is Ownable { 
+contract Creator is Ownable {
     string public username;
     string public name;
     string public bio;
@@ -17,8 +16,8 @@ contract Creator is Ownable {
     address public nftCollectionAddress;
 
     constructor(
-        string memory _username, 
-        string memory _name, 
+        string memory _username,
+        string memory _name,
         string memory _bio,
         string memory _profilePicUrl,
         string memory _nftCollectionName,
