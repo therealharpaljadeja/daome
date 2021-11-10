@@ -96,7 +96,6 @@ describe("NFT", function () {
 		// deploying marketplace
 		let NFTMarket = await ethers.getContractFactory("NFTMarket");
 		let nftMarket = await NFTMarket.deploy();
-
 		await nftMarket.deployed();
 
 		const listingPrice = await nftMarket.getListingPrice();
@@ -120,12 +119,13 @@ describe("NFT", function () {
 
 		// get creator address from creators.
 		let creator = await creators.getCreatorAddressByUsername("azure1050");
+		console.log(creator);
 		let Creator = await ethers.getContractFactory("Creator");
 		let creatorContract = await Creator.attach(creator);
 
 		// get nftCollectionAddress from creators.
 		let nftContractAddress = await creatorContract.nftCollectionAddress();
-		let NFT = await ethers.getContractFactory("contracts/NFT.sol:NFT");
+		let NFT = await ethers.getContractFactory("NFT");
 
 		let nftContract = await NFT.attach(nftContractAddress);
 
@@ -133,14 +133,25 @@ describe("NFT", function () {
 		await nftContract
 			.connect(firstSigner)
 			.createToken(
-				"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
-				10
+				"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
 			);
-		// await nftContract.connect(firstSigner).createToken("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg", 5);
-		// await nftContract.connect(buyerSigner).createToken("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg", 5);
-		// await nftContract.connect(firstSigner).createToken("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg", 10);
+		await nftContract
+			.connect(firstSigner)
+			.createToken(
+				"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
+			);
+		await nftContract
+			.connect(buyerSigner)
+			.createToken(
+				"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
+			);
+		await nftContract
+			.connect(firstSigner)
+			.createToken(
+				"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
+			);
 
-		// console.log(await nftContract.tokenURI(2));
+		console.log(await nftContract.tokenURI(2));
 
 		// let tokenAddress = await creatorContract.tokenAddress();
 
@@ -153,7 +164,7 @@ describe("NFT", function () {
 			.createMarketItem(
 				nftContractAddress,
 				1,
-				ethers.utils.parseUnits("1", "ether"),
+				ethers.utils.parseUnits("0.1", "ether"),
 				{ value: listingPrice }
 			);
 
@@ -163,8 +174,15 @@ describe("NFT", function () {
 		let marketplaceBalance = (
 			await nftContract.balanceOf(nftMarket.address)
 		).toString();
+		console.log(marketplaceBalance);
 
 		let fetchMarketItems = await nftMarket.fetchMarketItems();
+		console.log(fetchMarketItems);
+		for (let i = 0; i < parseInt(balanceOf); i++) {
+			console.log(
+				await nftContract.tokenOfOwnerByIndex(firstSigner.address, i)
+			);
+		}
 
 		// console.log(nftMarket.address);
 		// console.log(await nftMarket.fetchItemsCreated());
@@ -181,41 +199,8 @@ describe("NFT", function () {
 		await nftMarket
 			.connect(buyerSigner)
 			.createMarketSale(nftContractAddress, 1, {
-				value: ethers.utils.parseUnits("1", "ether"),
+				value: ethers.utils.parseUnits("0.1", "ether"),
 			});
-		let balanceOfNFTContract = await firstSigner.provider.getBalance(
-			nftContractAddress
-		);
-		console.log(
-			ethers.utils.formatEther(
-				(
-					await firstSigner.provider.getBalance(nftContractAddress)
-				).toString()
-			)
-		);
-
-		console.log(
-			ethers.utils.formatEther(
-				(
-					await firstSigner.provider.getBalance(firstSigner.address)
-				).toString()
-			)
-		);
-		await nftContract.connect(buyerSigner).withdraw();
-		console.log(
-			ethers.utils.formatEther(
-				(
-					await firstSigner.provider.getBalance(firstSigner.address)
-				).toString()
-			)
-		);
-		console.log(
-			ethers.utils.formatEther(
-				(
-					await firstSigner.provider.getBalance(nftContractAddress)
-				).toString()
-			)
-		);
 	});
 
 	// it("asb", async () => {
@@ -224,3 +209,4 @@ describe("NFT", function () {
 	//   console.log(`token uri` + await nftMarket.tokenURI(1));
 	// })
 });
+s;
