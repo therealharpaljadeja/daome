@@ -28,23 +28,6 @@ async function main() {
 	console.log(`Creators deployed at ${creators.address}`);
 
 	console.log(await getDeployerBalance(deployer));
-	// console.log("Deploying a Test Creator Contract");
-	// await creators.registerUser("testUser", "Test", "This is a test user", "https://www.google.com", "TestCollection", "Test", "TestToken", "TT", ethers.utils.parseUnits("100", "ether"));
-	// await creators.registerUser("testUser", "Test", "This is a test user", "https://www.google.com", "TestCollection", "Test");
-
-	// let creator = await creators.getCreatorAddressByUsername("testUser");
-	// console.log(`Creator deployed: ${creator}`);
-	// console.log(await getDeployerBalance(deployer));
-
-	// console.log(`Getting NFTCollection address for ${creator}`);
-	// let Creator = await ethers.getContractFactory("Creator");
-	// let creatorContract = await Creator.attach(creator);
-
-	// let nftContractAddress = await creatorContract.nftCollectionAddress();
-	// console.log(`NFTCollection for ${creator} is deployed at ${nftContractAddress}`);
-
-	// let tokenAddress = await creatorContract.tokenAddress();
-	// console.log(`Token for ${creator} is deployed at ${tokenAddress}`);
 }
 
 main()

@@ -7,12 +7,16 @@ const Button = {
 			letterSpacing: "2px",
 			bg: mode("brand.500", "brand.500")(props),
 			color: mode("white", "white")(props),
-			boxShadow:
-				"0 0 0 0 var(--chakra-colors-brand-500),  0 0 1rem .3rem var(--chakra-colors-brand-100)",
+			boxShadow: mode(
+				"0 0 0 0 var(--chakra-colors-brand-500),  0 0 1rem 3px var(--chakra-colors-brand-100)",
+				"0 0 0 0 var(--chakra-colors-brand-800),  0 0 1rem 3px var(--chakra-colors-brand-600)"
+			)(props),
 			transition: "all .3s ease-out",
 			_hover: {
-				boxShadow:
-					"0 0 0 .25rem var(--chakra-colors-brand-500),  0 0 1rem .3rem var(--chakra-colors-brand-100)",
+				boxShadow: mode(
+					"0 0 0 .25rem var(--chakra-colors-brand-500),  0 0 1rem -2px var(--chakra-colors-brand-100)",
+					"0 0 0 .25rem var(--chakra-colors-brand-800),  0 0 1rem -2px var(--chakra-colors-brand-600)"
+				)(props),
 				_disabled: {
 					background: "brand.300",
 					boxShadow: "0 0 0 0",

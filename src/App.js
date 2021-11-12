@@ -1,45 +1,102 @@
-import {
-	HStack,
-	Box,
-	VStack,
-	FormControl,
-	FormLabel,
-	Input,
-	Text,
-	Spacer,
-} from "@chakra-ui/react";
-import { BsFillCameraFill } from "react-icons/bs";
+import { useContext } from "react";
+
+// React Components
+import Header from "./components/Header";
+import CustomModal from "./components/CustomModal";
+import Footer from "./components/Footer";
+import Feed from "./pages/Feed";
+import ProfilePage from "./pages/ProfilePage";
+import OnboardingModal from "./components/OnboardingModal";
+import PostPage from "./pages/PostPage";
+
+// React Context
+import { Web3Context } from "./context/Web3Context";
+
+// React Router
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+// Chakra UI
+import { VStack, Grid, Button, useDisclosure, HStack } from "@chakra-ui/react";
 
 function App() {
+	const { onClose } = useDisclosure();
+
+	const web3Context = useContext(Web3Context);
+	const {
+		chainId,
+		requestNetworkChange,
+		account,
+		userRegistered,
+		connectWallet,
+		connectingAccount,
+	} = web3Context;
 	return (
-		<HStack padding={4}>
-			<FormControl>
-				<FormLabel cursor="pointer">
-					<Box
-						padding={1}
-						borderRadius=".5rem"
-						background="var(--chakra-colors-brand-100)"
-						width="150px"
-						height="150px"
+		<Router>
+			<CustomModal
+				modalButtonOnClick={requestNetworkChange}
+				isOpen={
+					chainId !== "0xaef3" &&
+					chainId !== null &&
+					chainId !== undefined
+				}
+				onClose={onClose}
+				modalHeader="Invalid Network"
+				modalCloseButton={false}
+				modalFooterButtonText="Change Network"
+			></CustomModal>
+			<Grid
+				height="100vh"
+				width="100vw"
+				templateColumns={["1fr", "1fr 2fr 1fr"]}
+			>
+				<VStack justifyContent="space-between" spacing={0}>
+					<Header />
+					<HStack
+						width="100%"
+						height="100%"
+						alignItems="flex-start"
+						justifyContent="center"
 					>
-						<VStack
-							border="2px dashed var(--chakra-colors-brand-500)"
-							padding={2}
-							justifyContent="space-around"
-							height="100%"
-							borderRadius=".5rem"
-						>
-							<BsFillCameraFill
-								size="30px"
-								fill="var(--chakra-colors-brand-500)"
-							/>
-							<Text>Upload Image</Text>
-						</VStack>
-					</Box>
-				</FormLabel>
-				<Input display="none" type="file" accept="image/*" />
-			</FormControl>
-		</HStack>
+						{account !== null ? (
+							userRegistered !== null ? (
+								userRegistered === true ? (
+									<Switch>
+										<Route exact path="/">
+											<ProfilePage />
+										</Route>
+										<Route
+											exact
+											path="/nft/:creator/:address/:id"
+										>
+											<PostPage />
+										</Route>
+										<Route exact path="/feed">
+											<Feed />
+										</Route>
+									</Switch>
+								) : (
+									<OnboardingModal
+										accountAddress={account}
+										isOpen={userRegistered === false}
+										onClose={onClose}
+									/>
+								)
+							) : null
+						) : (
+							<Button
+								alignSelf="center"
+								isLoading={connectingAccount}
+								onClick={connectWallet}
+							>
+								Connect Wallet
+							</Button>
+						)}
+					</HStack>
+
+					<Footer />
+				</VStack>
+			</Grid>
+		</Router>
 	);
 }
 
