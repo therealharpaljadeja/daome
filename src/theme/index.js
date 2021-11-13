@@ -1,4 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
 
 import Button from "./components/Button";
 import Heading from "./components/Heading";
@@ -7,13 +8,17 @@ import Spinner from "./components/Spinner";
 const theme = extendTheme({
 	initialColorMode: "light",
 	useSystemColorMode: false,
+	fonts: {
+		body: "Inter",
+		heading: "Inter",
+	},
 	styles: {
-		global: {
+		global: (props) => ({
 			body: {
-				fontFamily: "Archivo",
-				color: "brand.500",
+				fontFeatureSettings: `"kern" 1,"liga" 1,"calt" 0,"kern"`,
+				color: mode("purple.800", "white")(props),
 			},
-		},
+		}),
 	},
 	colors: {
 		brand: {

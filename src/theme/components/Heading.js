@@ -1,6 +1,6 @@
 const Heading = {
 	baseStyle: {
-		fontFamily: "Archivo",
+		fontFamily: "Inter",
 	},
 };
 

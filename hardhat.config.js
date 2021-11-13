@@ -14,9 +14,7 @@ module.exports = {
 		alfajores: {
 			url: "https://alfajores-forno.celo-testnet.org",
 			chainId: 44787,
-			accounts: [
-				"547c7bdb1751eced86f43f102148c1b633610ef919e5a9390ed20921784e3075",
-			],
+			accounts: [process.env.WALLET_PRIVATE_KEY],
 		},
 	},
 };
