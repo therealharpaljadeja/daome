@@ -97,7 +97,6 @@ function ProfilePage() {
 									boxSizing="border-box"
 									padding={2}
 									borderRadius={4}
-									colorScheme="brand"
 									background={bg}
 									overflowX="scroll"
 									width="100% - calc(2rem)"
@@ -132,11 +131,14 @@ function ProfilePage() {
 															let toUrl = `/nft/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
 															return (
 																<Link
+																	key={
+																		nft.tokenId
+																	}
 																	to={toUrl}
 																>
 																	<Image
 																		key={
-																			index
+																			nft.tokenId
 																		}
 																		src={
 																			nft.image
@@ -172,10 +174,15 @@ function ProfilePage() {
 													(nft) => {
 														let toUrl = `/nft/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
 														return (
-															<Link to={toUrl}>
+															<Link
+																key={
+																	nft.tokenId
+																}
+																to={toUrl}
+															>
 																<Image
 																	key={
-																		nft.name
+																		nft.tokenId
 																	}
 																	src={
 																		nft.image

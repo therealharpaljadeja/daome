@@ -23,7 +23,7 @@ function PostPage() {
 				setNFT(nft);
 			}
 		})();
-	}, [web3Context, address, creator, id]);
+	}, [address, creator, id]);
 
 	return (
 		<VStack spacing={0} alignItems="center" width="100%">

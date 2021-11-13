@@ -6,10 +6,10 @@ import { useEffect } from "react/cjs/react.development";
 
 function Feed() {
 	const web3Context = useContext(Web3Context);
-	const { fetchMarketItemsUsingSigner, fetchingMarketItems, marketItems } =
-		web3Context;
+	const { fetchingMarketItems, marketItems } = web3Context;
 
 	useEffect(() => {
+		const { fetchMarketItemsUsingSigner } = web3Context;
 		fetchMarketItemsUsingSigner();
 	}, []);
 
