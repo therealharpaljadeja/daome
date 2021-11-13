@@ -39,7 +39,7 @@ function Header() {
 					onClick={toggleColorMode}
 					variant="ghost"
 					colorScheme="whiteAlpha"
-					icon={<FiSun stroke="#aa00ff" />}
+					icon={<FiSun stroke="var(--chakra-colors-purple-800)" />}
 				/>
 				<IconButton
 					onClick={onOpen}

@@ -7,7 +7,12 @@ import {
 	Input,
 	Textarea,
 	Image,
+	Box,
+	Text,
+	Icon,
+	useColorModeValue,
 } from "@chakra-ui/react";
+import { AiOutlineCamera } from "react-icons/ai";
 import { Web3Context } from "../context/Web3Context";
 import { NFTStorage, File } from "nft.storage";
 
@@ -25,6 +30,11 @@ function MintNFTModal({ isOpen, onClose }) {
 	const web3Context = useContext(Web3Context);
 	const { mintNFTUsingSigner, isMintingNFT } = web3Context;
 	const [uploadingMetadata, setUploadingMetadata] = useState(false);
+
+	const imageUploadBg = useColorModeValue(
+		"var(--chakra-colors-brand-100)",
+		"var(--chakra-colors-brand-700)"
+	);
 
 	const handleImageUpload = async ({ target }) => {
 		console.log(target.files[0]);
@@ -77,8 +87,32 @@ function MintNFTModal({ isOpen, onClose }) {
 			<VStack spacing={5} alignItems="flex-start">
 				{isImageUploaded ? <Image /> : null}
 				<FormControl>
-					<FormLabel>Image</FormLabel>
-					<Input onChange={handleImageUpload} type="file" />
+					<FormLabel>
+						<Box
+							w="100%"
+							h="150px"
+							background={imageUploadBg}
+							borderRadius={5}
+							padding={2}
+						>
+							<VStack
+								w="100%"
+								h="100%"
+								border="2px dashed"
+								borderRadius={5}
+								justifyContent="center"
+							>
+								<Icon w="20px" h="20px" as={AiOutlineCamera} />
+								<Text>Upload Image</Text>
+							</VStack>
+						</Box>
+					</FormLabel>
+					<Input
+						display="none"
+						onChange={handleImageUpload}
+						type="file"
+						accept="image/*"
+					/>
 				</FormControl>
 				<FormControl>
 					<FormLabel>Title</FormLabel>

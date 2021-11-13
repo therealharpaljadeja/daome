@@ -2,10 +2,16 @@ import { useContext } from "react";
 import Post from "./../components/Post";
 import { VStack, Spinner, Heading } from "@chakra-ui/react";
 import { Web3Context } from "../context/Web3Context";
+import { useEffect } from "react/cjs/react.development";
 
 function Feed() {
 	const web3Context = useContext(Web3Context);
-	const { fetchingMarketItems, marketItems } = web3Context;
+	const { fetchMarketItemsUsingSigner, fetchingMarketItems, marketItems } =
+		web3Context;
+
+	useEffect(() => {
+		fetchMarketItemsUsingSigner();
+	}, []);
 
 	return (
 		<VStack width="100%" alignItems="center">
