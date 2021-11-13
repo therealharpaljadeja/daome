@@ -3,7 +3,7 @@ import Post from "../components/Post";
 // import Comment from "../components/Comment";
 // import Bid from "../components/Bid";
 // import BidHeader from "../components/BidHeader";
-import { useEffect, useContext, useState } from "react/cjs/react.development";
+import { useEffect, useContext, useState } from "react";
 import { Web3Context } from "../context/Web3Context";
 import { useParams } from "react-router-dom";
 

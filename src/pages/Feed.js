@@ -2,7 +2,7 @@ import { useContext } from "react";
 import Post from "./../components/Post";
 import { VStack, Spinner, Heading } from "@chakra-ui/react";
 import { Web3Context } from "../context/Web3Context";
-import { useEffect } from "react/cjs/react.development";
+import { useEffect } from "react";
 
 function Feed() {
 	const web3Context = useContext(Web3Context);
