@@ -15,7 +15,7 @@ import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
 import { MdOutlineSell } from "react-icons/md";
-import { useEffect } from "react/cjs/react.development";
+import { useEffect } from "react";
 import CustomTab from "../components/CustomTab";
 import ProfileBody from "../components/ProfileBody";
 import ProfileHeader from "../components/ProfileHeader";
