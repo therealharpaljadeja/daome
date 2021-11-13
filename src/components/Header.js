@@ -46,7 +46,9 @@ function Header() {
 					variant="ghost"
 					colorScheme="whiteAlpha"
 					disabled={Object.keys(creator).length === 0}
-					icon={<FiSettings stroke="#aa00ff" />}
+					icon={
+						<FiSettings stroke="var(--chakra-colors-purple-800)" />
+					}
 				/>
 			</HStack>
 		</>
