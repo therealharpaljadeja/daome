@@ -141,6 +141,9 @@ function PostBody({
 							gridColumn="1/ span 2"
 							textDecoration="none"
 							target="_blank"
+							_hover={{ textDecoration: "none" }}
+							_active={{ textDecoration: "none" }}
+							_focus={{ textDecoration: "none" }}
 						>
 							<Button width="100%" colorScheme="pink">
 								<span style={{ marginRight: "5px" }}>

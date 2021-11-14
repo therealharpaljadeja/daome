@@ -9,12 +9,15 @@ import {
 	TabPanels,
 	TabPanel,
 	Image,
+	Box,
 	useColorModeValue,
+	Icon,
 } from "@chakra-ui/react";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
 import { MdOutlineSell } from "react-icons/md";
+import { HiOutlineEmojiSad } from "react-icons/hi";
 import { useEffect } from "react";
 import CustomTab from "../components/CustomTab";
 import ProfileBody from "../components/ProfileBody";
@@ -120,13 +123,13 @@ function ProfilePage() {
 										{currentUserNFTs !== null ||
 										currentUserNFTsBoughtOnMarketplace !==
 											null ? (
-											<Grid
-												overflowY="scroll"
-												gridGap="1px"
-												templateColumns="repeat(3, 1fr)"
-											>
-												{userOwnedNFT !== null ? (
-													userOwnedNFT.map(
+											userOwnedNFT.length !== 0 ? (
+												<Grid
+													overflowY="scroll"
+													gridGap="1px"
+													templateColumns="repeat(3, 1fr)"
+												>
+													{userOwnedNFT.map(
 														(nft, index) => {
 															let toUrl = `/nft/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
 															return (
@@ -147,55 +150,94 @@ function ProfilePage() {
 																</Link>
 															);
 														}
-													)
-												) : (
-													<Heading
-														pt={3}
-														textAlign="center"
-														size="sm"
-													>
-														No NFTs
-													</Heading>
-												)}
-											</Grid>
+													)}
+												</Grid>
+											) : (
+												<Box
+													w="100% - calc(5rem)"
+													h="100%"
+													background={bg}
+													mx={5}
+													borderRadius={4}
+													padding={5}
+												>
+													<VStack spacing={5}>
+														<Icon
+															w="40px"
+															h="40px"
+															as={
+																HiOutlineEmojiSad
+															}
+														/>
+														<Heading size="sm">
+															No Owned NFTs
+														</Heading>
+													</VStack>
+												</Box>
+											)
 										) : (
 											<Spinner />
 										)}
 									</TabPanel>
 									<TabPanel padding={0}>
-										<Grid
-											overflowY="scroll"
-											gridGap="1px"
-											templateColumns="repeat(3, 1fr)"
-										>
-											{currentUserNFTOnMarketplace !==
-											null ? (
-												currentUserNFTOnMarketplace.map(
-													(nft) => {
-														let toUrl = `/nft/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
-														return (
-															<Link
-																key={
-																	nft.tokenId
-																}
-																to={toUrl}
-															>
-																<Image
+										{currentUserNFTOnMarketplace !==
+										null ? (
+											currentUserNFTOnMarketplace.length !==
+											0 ? (
+												<Grid
+													overflowY="scroll"
+													gridGap="1px"
+													templateColumns="repeat(3, 1fr)"
+												>
+													{currentUserNFTOnMarketplace.map(
+														(nft) => {
+															let toUrl = `/nft/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
+															return (
+																<Link
 																	key={
 																		nft.tokenId
 																	}
-																	src={
-																		nft.image
-																	}
-																/>
-															</Link>
-														);
-													}
-												)
+																	to={toUrl}
+																>
+																	<Image
+																		key={
+																			nft.tokenId
+																		}
+																		src={
+																			nft.image
+																		}
+																	/>
+																</Link>
+															);
+														}
+													)}
+												</Grid>
 											) : (
-												<Spinner />
-											)}
-										</Grid>
+												<Box
+													w="100% - calc(5rem)"
+													h="100%"
+													background={bg}
+													mx={5}
+													borderRadius={4}
+													padding={5}
+												>
+													<VStack spacing={5}>
+														<Icon
+															w="40px"
+															h="40px"
+															as={
+																HiOutlineEmojiSad
+															}
+														/>
+														<Heading size="sm">
+															No Listed NFTs
+														</Heading>
+													</VStack>
+												</Box>
+											)
+										) : (
+											<Spinner />
+										)}
 									</TabPanel>
 								</TabPanels>
 							</Tabs>
