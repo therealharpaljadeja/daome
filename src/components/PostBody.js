@@ -6,11 +6,12 @@ import {
 	Grid,
 	Spinner,
 	Link,
+	useDisclosure,
+	Skeleton,
 } from "@chakra-ui/react";
 import { useContext } from "react";
 import { Web3Context } from "../context/Web3Context";
 import SellNFTModal from "./SellNFTModal";
-import { useDisclosure } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { FiExternalLink } from "react-icons/fi";
 
@@ -51,13 +52,25 @@ function PostBody({
 				isOpen={isOpen}
 			/>
 			<VStack px={4} alignItems="flex-start" width="100%">
-				<Heading size="md">{name}</Heading>
-				<Text fontSize="sm" noOfLines="3">
-					{bio}
-				</Text>
+				<Skeleton isLoaded={name !== undefined}>
+					{name === undefined ? (
+						"no name"
+					) : (
+						<Heading size="md">{name}</Heading>
+					)}
+				</Skeleton>
+				<Skeleton isLoaded={bio !== undefined}>
+					{bio === undefined ? (
+						"lorem askansd asdkas akslndejnkjnaa aksdnawkjrnq asknakjd klsm"
+					) : (
+						<Text fontSize="sm" noOfLines="3">
+							{bio}
+						</Text>
+					)}
+				</Skeleton>
 			</VStack>
-			{account !== null ? (
-				owner !== process.env.REACT_APP_MARKETPLACE_CONTRACT_REEF &&
+			{account !== null && owner !== undefined ? (
+				owner !== process.env.REACT_APP_MARKETPLACE_ADDRESS &&
 				owner.toLowerCase() !== account.toLowerCase() ? null : (
 					<Grid
 						borderTop="1px solid"
@@ -68,8 +81,7 @@ function PostBody({
 						width="100%"
 						gridGap={2}
 					>
-						{owner !==
-							process.env.REACT_APP_MARKETPLACE_CONTRACT_REEF &&
+						{owner !== process.env.REACT_APP_MARKETPLACE_ADDRESS &&
 						owner.toLowerCase() === account.toLowerCase() ? (
 							isApprovedByOwner === true ? (
 								<Button

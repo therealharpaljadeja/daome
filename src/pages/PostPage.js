@@ -27,13 +27,7 @@ function PostPage() {
 
 	return (
 		<VStack spacing={0} alignItems="center" width="100%">
-			{gettingMetadata === false ? (
-				nft != null ? (
-					<Post nft={nft} id={id} isExpanded={false} />
-				) : null
-			) : (
-				<Spinner />
-			)}
+			<Post nft={nft} id={id} isExpanded={false} />
 			{/* <Tabs isFitted width="100%">
                 <TabList>
                     <Tab>Comments</Tab>
