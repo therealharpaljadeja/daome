@@ -1,4 +1,4 @@
-import { VStack, Spinner } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import Post from "../components/Post";
 // import Comment from "../components/Comment";
 // import Bid from "../components/Bid";
@@ -11,7 +11,6 @@ function PostPage() {
 	const { creator, address, id } = useParams();
 
 	const web3Context = useContext(Web3Context);
-	const { gettingMetadata } = web3Context;
 	const [nft, setNFT] = useState(null);
 
 	useEffect(() => {

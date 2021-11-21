@@ -72,7 +72,6 @@ export const getCreatorObjFromAddress = async (
 	let nftCollectionName = await creatorContract.nftCollectionName();
 	let nftCollectionSymbol = await creatorContract.nftCollectionSymbol();
 	let nftCollectionAddress = await creatorContract.nftCollectionAddress();
-	console.log(wallet);
 	let royaltyEarned = ethers.utils.formatEther(
 		(await provider.getBalance(nftCollectionAddress)).toString()
 	);

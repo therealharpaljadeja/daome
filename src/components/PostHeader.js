@@ -1,4 +1,4 @@
-import { HStack, Text, Skeleton, Tag, Link } from "@chakra-ui/react";
+import { HStack, Skeleton, Tag, Link } from "@chakra-ui/react";
 import CustomAvatar from "./CustomAvatar";
 import { FiExternalLink } from "react-icons/fi";
 

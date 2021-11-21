@@ -1,4 +1,4 @@
-import { VStack, Image, Skeleton, Box } from "@chakra-ui/react";
+import { VStack, Image, Skeleton } from "@chakra-ui/react";
 import ExpandedPostBody from "./ExpandedPostBody";
 import PostBody from "./PostBody";
 import PostHeader from "./PostHeader";

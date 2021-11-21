@@ -1,19 +1,28 @@
 import { providers } from "ethers";
 import React, { useEffect, useState } from "react";
 import {
+	VStack,
+	Heading,
+	Modal,
+	ModalContent,
+	Button,
+	ModalOverlay,
+	ModalCloseButton,
+	ModalBody,
+	ModalHeader,
+	Box,
+	Icon,
+	Link,
+	useDisclosure,
+	useColorModeValue,
+} from "@chakra-ui/react";
+import {
 	isUserRegistered,
 	getCreatorAddressBySender,
 	getCreatorAddressByUsername,
 	registerUser,
 	getCreatorObjFromAddress,
 } from "../utils/Creators";
-import {
-	approveToMarketplace,
-	mintNFT,
-	tokenMetadata,
-	tokenOwnedByUser,
-	withdrawRoyalty,
-} from "../utils/NFT";
 import {
 	createMarketItem,
 	createSale,
@@ -23,6 +32,7 @@ import {
 	getMarketItemByItemId,
 } from "../utils/NFTMarket";
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
+import { BsCheck2 } from "react-icons/bs";
 
 export const Web3Context = React.createContext(null);
 
@@ -36,6 +46,8 @@ const validNetworkOptions = {
 };
 
 export function Web3ContextProvider({ children }) {
+	const { isOpen, onOpen, onClose } = useDisclosure();
+
 	const [metamaskInstalled, setMetamaskInstalled] = useState(false);
 	const [wallet, setWallet] = useState(null);
 	const [account, setAccount] = useState(null);
@@ -46,8 +58,6 @@ export function Web3ContextProvider({ children }) {
 	const [creator, setCreator] = useState({});
 	const [creatorAddress, setCreatorAddress] = useState(null);
 	const [checkingUserRegistered, setCheckingUserRegistered] = useState(false);
-	const [isMintingNFT, setIsMintingNFT] = useState(false);
-	const [loadingNFT, setLoadingNFT] = useState(false);
 	const [fetchingMarketItems, setFetchingMarketItems] = useState(false);
 	const [fetchingItemsCreated, setFetchingItemsCreated] = useState(false);
 	const [fetchingMyNFTs, setFetchingMyNFTs] = useState(false);
@@ -56,15 +66,13 @@ export function Web3ContextProvider({ children }) {
 	const [currentUserNFTOnMarketplace, setCurrentUserNFTOnMarketplace] =
 		useState(null);
 	const [marketItems, setMarketItems] = useState(null);
-	const [gettingMetadata, setGettingMetadata] = useState(null);
-	const [approvingToMarketplace, setApprovingToMarketplace] = useState(false);
 	const [creatingMarketItem, setCreatingMarketItem] = useState(false);
 	const [
 		currentUserNFTsBoughtOnMarketplace,
 		setCurrentUserNFTsBoughtOnMarketplace,
 	] = useState(null);
 	const [gettingItem, setGettingItem] = useState(false);
-	const [withdrawingRoyalty, setWithdrawingRoyalty] = useState(false);
+	const [transactionLink, setTransactionLink] = useState(null);
 
 	useEffect(() => {
 		if (window.ethereum !== undefined) {
@@ -88,7 +96,7 @@ export function Web3ContextProvider({ children }) {
 	}, []);
 
 	useEffect(() => {
-		if (wallet !== null && account !== null) {
+		if (account !== null && chainId === validNetworkOptions.chainId) {
 			setCheckingUserRegistered(true);
 			const init = async () => {
 				async function checkUserRegistered() {
@@ -103,7 +111,7 @@ export function Web3ContextProvider({ children }) {
 			};
 			init();
 		}
-	}, [account, wallet]);
+	}, [account]);
 
 	useEffect(() => {
 		if (wallet !== null) {
@@ -158,7 +166,6 @@ export function Web3ContextProvider({ children }) {
 
 	async function requestNetworkChange() {
 		console.log("requesting network change");
-		console.log(window.ethereum);
 		window.ethereum.request({
 			method: "wallet_addEthereumChain",
 			params: [validNetworkOptions],
@@ -175,19 +182,6 @@ export function Web3ContextProvider({ children }) {
 		if (result.hash !== undefined) {
 			setUserRegistered(true);
 		}
-	}
-
-	async function mintNFTUsingSigner(tokenURI, royaltyPercentage) {
-		setIsMintingNFT(true);
-		await mintNFT(wallet, creatorAddress, tokenURI, royaltyPercentage);
-		setIsMintingNFT(false);
-	}
-
-	async function getNFTsOwnerByUserUsingSigner() {
-		setLoadingNFT(true);
-		let result = await tokenOwnedByUser(wallet, creatorAddress);
-		setCurrentUserNFTs(result);
-		setLoadingNFT(false);
 	}
 
 	async function fetchMarketItemsUsingSigner() {
@@ -227,39 +221,11 @@ export function Web3ContextProvider({ children }) {
 		setCreatingMarketSale(false);
 	}
 
-	async function nftMetadataUsingSigner(
-		creatorAddress,
-		collectionAddress,
-		tokenId
-	) {
-		setGettingMetadata(true);
-		let nft = await tokenMetadata(
-			wallet,
-			creatorAddress,
-			collectionAddress,
-			tokenId
-		);
-		setGettingMetadata(false);
-		return nft;
-	}
-
-	async function approveToMarketplaceUsingSigner(collectionAddress, tokenId) {
-		setApprovingToMarketplace(true);
-		await approveToMarketplace(wallet, collectionAddress, tokenId);
-		setApprovingToMarketplace(false);
-	}
-
 	async function getMarketItemByIdUsingSigner(itemId) {
 		setGettingItem(true);
 		let nft = await getMarketItemByItemId(wallet, itemId);
 		setGettingItem(false);
 		return nft;
-	}
-
-	async function withdrawRoyaltyUsingSigner() {
-		setWithdrawingRoyalty(true);
-		withdrawRoyalty(creator.nftCollectionAddress, wallet);
-		setWithdrawingRoyalty(false);
 	}
 
 	return (
@@ -307,6 +273,31 @@ export function Web3ContextProvider({ children }) {
 				withdrawRoyaltyUsingSigner,
 			}}
 		>
+			<Modal isOpen={isOpen} isCentered onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent margin="10px">
+					<ModalCloseButton />
+					<ModalHeader></ModalHeader>
+					<ModalBody padding="20px">
+						<VStack justifyContent="center" spacing="20px">
+							<Box
+								background={useColorModeValue(
+									"var(--chakra-colors-brand-200)",
+									"var(--chakra-colors-brand-700)"
+								)}
+								borderRadius="full"
+								padding="15px"
+							>
+								<Icon w="25px" h="25px" as={BsCheck2} />
+							</Box>
+							<Heading size="md">Transaction Successful</Heading>
+							<Link href={transactionLink}>
+								<Button>View on Explorer</Button>
+							</Link>
+						</VStack>
+					</ModalBody>
+				</ModalContent>
+			</Modal>
 			{children}
 		</Web3Context.Provider>
 	);
