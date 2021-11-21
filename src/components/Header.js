@@ -5,6 +5,7 @@ import {
 	useDisclosure,
 	IconButton,
 	useColorMode,
+	useColorModeValue,
 	Spacer,
 } from "@chakra-ui/react";
 import { FiSettings, FiSun } from "react-icons/fi";
@@ -16,6 +17,8 @@ function Header() {
 	const { toggleColorMode } = useColorMode();
 	const web3Context = useContext(Web3Context);
 	const { creator } = web3Context;
+	const bg = useColorModeValue("white", "var(--chakra-colors-gray-800)");
+	const color = useColorModeValue("var(--chakra-colors-gray-800)", "white");
 
 	return (
 		<>
@@ -28,7 +31,7 @@ function Header() {
 				borderColor="brand.200"
 				position="sticky"
 				zIndex="1000"
-				background="light.200"
+				background={bg}
 				width="100%"
 				height="8vh"
 				boxShadow="0 10px 200px 6px rgba(0,0,0,.1)"
@@ -39,16 +42,14 @@ function Header() {
 					onClick={toggleColorMode}
 					variant="ghost"
 					colorScheme="whiteAlpha"
-					icon={<FiSun stroke="var(--chakra-colors-purple-800)" />}
+					icon={<FiSun stroke={color} />}
 				/>
 				<IconButton
 					onClick={onOpen}
 					variant="ghost"
 					colorScheme="whiteAlpha"
 					disabled={Object.keys(creator).length === 0}
-					icon={
-						<FiSettings stroke="var(--chakra-colors-purple-800)" />
-					}
+					icon={<FiSettings stroke={color} />}
 				/>
 			</HStack>
 		</>

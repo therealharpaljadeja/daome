@@ -66,29 +66,21 @@ function ProfilePage() {
 
 	return (
 		<VStack width="100%" padding={0}>
+			<ProfileHeader username={username} profilePicUrl={profilePicUrl} />
+			<ProfileBody
+				nftOwned={
+					userOwnedNFT && currentUserNFTOnMarketplace
+						? userOwnedNFT.length +
+						  currentUserNFTOnMarketplace.length
+						: undefined
+				}
+				username={username}
+				bio={bio}
+				name={name}
+				royaltyEarned={royaltyEarned}
+			/>
 			{creator !== null ? (
 				<>
-					<ProfileHeader
-						username={username}
-						profilePicUrl={profilePicUrl}
-					/>
-					{currentUserNFTs !== null &&
-					userOwnedNFT !== null &&
-					currentUserNFTOnMarketplace !== null &&
-					currentUserNFTsBoughtOnMarketplace !== null ? (
-						<ProfileBody
-							nftOwned={
-								userOwnedNFT.length +
-								currentUserNFTOnMarketplace.length
-							}
-							username={username}
-							bio={bio}
-							name={name}
-							royaltyEarned={royaltyEarned}
-						/>
-					) : (
-						<Spinner />
-					)}
 					<HStack justifyContent="center" width="100%">
 						{loadingNFT === false &&
 						currentUserNFTs !== null &&

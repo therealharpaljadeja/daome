@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers, ContractFactory } from "ethers";
 import NFT from "../abi/NFT.json";
 import { getNFTCollectionAddress } from "./Creator";
 import axios from "axios";
