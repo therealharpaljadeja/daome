@@ -13,7 +13,7 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import { AiOutlineCamera } from "react-icons/ai";
-import { Web3Context } from "../context/Web3Context";
+import { NFTContext } from "../context/NFTContext";
 import { NFTStorage, File } from "nft.storage";
 
 const client = new NFTStorage({
@@ -27,9 +27,10 @@ function MintNFTModal({ isOpen, onClose }) {
 	const [fileObj, setFileObj] = useState(null);
 	const [royaltyPercentage, setRoyaltyPercentage] = useState(0);
 
-	const web3Context = useContext(Web3Context);
-	const { mintNFTUsingSigner, isMintingNFT } = web3Context;
 	const [uploadingMetadata, setUploadingMetadata] = useState(false);
+
+	const nftContext = useContext(NFTContext);
+	const { mintNFTUsingSigner, isMintingNFT } = nftContext;
 
 	const imageUploadBg = useColorModeValue(
 		"var(--chakra-colors-brand-100)",

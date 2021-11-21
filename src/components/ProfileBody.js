@@ -7,13 +7,13 @@ import {
 	useDisclosure,
 	Skeleton,
 } from "@chakra-ui/react";
-import { Web3Context } from "../context/Web3Context";
 import BuyTokenModal from "./BuyTokenModal";
+import { NFTContext } from "../context/NFTContext";
 
 function ProfileBody({ royaltyEarned, name, bio, nftOwned }) {
 	const { isOpen, onClose } = useDisclosure();
-	const web3Context = useContext(Web3Context);
-	const { withdrawingRoyalty, withdrawRoyaltyUsingSigner } = web3Context;
+	const nftContext = useContext(NFTContext);
+	const { withdrawingRoyalty, withdrawRoyaltyUsingSigner } = nftContext;
 	return (
 		<>
 			<BuyTokenModal isOpen={isOpen} onClose={onClose} />

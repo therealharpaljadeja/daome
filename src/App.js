@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Chakra UI
 import { VStack, Grid, Button, useDisclosure, HStack } from "@chakra-ui/react";
+import { CreatorsContext } from "./context/CreatorsContext";
 
 function App() {
 	const { onClose } = useDisclosure();
@@ -26,10 +27,12 @@ function App() {
 		chainId,
 		requestNetworkChange,
 		account,
-		userRegistered,
 		connectWallet,
 		connectingAccount,
 	} = web3Context;
+
+	const creatorsContext = useContext(CreatorsContext);
+	const { userRegistered } = creatorsContext;
 	return (
 		<Router>
 			<CustomModal

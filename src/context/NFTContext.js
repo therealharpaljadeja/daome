@@ -6,6 +6,7 @@ import {
 	tokenOwnedByUser,
 	withdrawRoyalty,
 } from "../utils/NFT";
+import { CreatorsContext } from "./CreatorsContext";
 import { Web3Context } from "./Web3Context";
 
 export const NFTContext = React.createContext(null);
@@ -14,11 +15,15 @@ export function NFTContextProvider({ children }) {
 	const web3Context = useContext(Web3Context);
 	const { wallet } = web3Context;
 
+	const creatorsContext = useContext(CreatorsContext);
+	const { creatorAddress, creator } = creatorsContext;
+
 	const [isMintingNFT, setIsMintingNFT] = useState(false);
 	const [loadingNFT, setLoadingNFT] = useState(false);
 	const [gettingMetadata, setGettingMetadata] = useState(null);
 	const [approvingToMarketplace, setApprovingToMarketplace] = useState(false);
 	const [withdrawingRoyalty, setWithdrawingRoyalty] = useState(false);
+	const [currentUserNFTs, setCurrentUserNFTs] = useState(null);
 
 	async function mintNFTUsingSigner(tokenURI, royaltyPercentage) {
 		setIsMintingNFT(true);
@@ -74,6 +79,7 @@ export function NFTContextProvider({ children }) {
 				gettingMetadata,
 				approvingToMarketplace,
 				withdrawingRoyalty,
+				currentUserNFTs,
 				mintNFTUsingSigner,
 				getNFTsOwnerByUserUsingSigner,
 				nftMetadataUsingSigner,

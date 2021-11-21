@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Web3Context } from "../context/Web3Context";
+import { CreatorsContext } from "../context/CreatorsContext";
 import { Link } from "react-router-dom";
 import {
 	HStack,
@@ -15,7 +16,11 @@ import { AiOutlineUser } from "react-icons/ai";
 function Footer() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const web3Context = useContext(Web3Context);
-	const { creator, account } = web3Context;
+	const { account } = web3Context;
+
+	const creatorsContext = useContext(CreatorsContext);
+	const { creator } = creatorsContext;
+
 	const bg = useColorModeValue("white", "var(--chakra-colors-gray-800)");
 
 	return (

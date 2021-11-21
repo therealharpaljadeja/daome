@@ -9,17 +9,17 @@ import {
 	Spacer,
 } from "@chakra-ui/react";
 import { FiSettings, FiSun } from "react-icons/fi";
-import { Web3Context } from "../context/Web3Context";
+import { CreatorsContext } from "../context/CreatorsContext";
 import ProfileSettingsModal from "./ProfileSettingsModal";
 
 function Header() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { toggleColorMode } = useColorMode();
-	const web3Context = useContext(Web3Context);
-	const { creator } = web3Context;
+	const creatorsContext = useContext(CreatorsContext);
+	const { creator } = creatorsContext;
 	const bg = useColorModeValue("white", "var(--chakra-colors-gray-800)");
 	const color = useColorModeValue("var(--chakra-colors-gray-800)", "white");
-
+	console.log(creator);
 	return (
 		<>
 			<ProfileSettingsModal isOpen={isOpen} onClose={onClose} />

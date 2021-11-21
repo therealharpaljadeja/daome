@@ -6,15 +6,18 @@ import Post from "../components/Post";
 import { useEffect, useContext, useState } from "react";
 import { Web3Context } from "../context/Web3Context";
 import { useParams } from "react-router-dom";
+import { NFTContext } from "../context/NFTContext";
 
 function PostPage() {
 	const { creator, address, id } = useParams();
 
 	const web3Context = useContext(Web3Context);
+	const nftContext = useContext(NFTContext);
 	const [nft, setNFT] = useState(null);
 
 	useEffect(() => {
-		const { provider, nftMetadataUsingSigner } = web3Context;
+		const { provider } = web3Context;
+		const { nftMetadataUsingSigner } = nftContext;
 		(async () => {
 			if (provider != null) {
 				let nft = await nftMetadataUsingSigner(creator, address, id);

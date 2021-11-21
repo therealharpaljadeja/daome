@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
 	isUserRegistered,
 	getCreatorAddressBySender,
@@ -18,9 +18,9 @@ const validNetworkOptions = {
 
 export const CreatorsContext = React.createContext(null);
 
-export function CreatorContextProvider({ children }) {
+export function CreatorsContextProvider({ children }) {
 	const web3Context = useContext(Web3Context);
-	const { account, wallet, provider } = web3Context;
+	const { account, wallet, provider, chainId } = web3Context;
 
 	const [checkingUserRegistered, setCheckingUserRegistered] = useState(false);
 	const [creatorAddress, setCreatorAddress] = useState(null);
@@ -38,7 +38,7 @@ export function CreatorContextProvider({ children }) {
 
 				checkUserRegistered().then((result) => {
 					setUserRegistered(result);
-					setCheckingUserRegistered(true);
+					setCheckingUserRegistered(false);
 				});
 			};
 			init();
@@ -56,7 +56,6 @@ export function CreatorContextProvider({ children }) {
 					setCreatorAddress(result);
 				});
 			}
-
 			getCreatorAddressBySenderUsingSigner();
 		}
 	}, [userRegistered, wallet]);
@@ -70,7 +69,6 @@ export function CreatorContextProvider({ children }) {
 					}
 				);
 			}
-
 			getCreatorObjUsingSigner();
 		}
 	}, [creatorAddress, wallet, provider]);

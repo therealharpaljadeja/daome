@@ -22,29 +22,29 @@ import { useEffect } from "react";
 import CustomTab from "../components/CustomTab";
 import ProfileBody from "../components/ProfileBody";
 import ProfileHeader from "../components/ProfileHeader";
-import { Web3Context } from "../context/Web3Context";
+import { CreatorsContext } from "../context/CreatorsContext";
+import { NFTContext } from "../context/NFTContext";
+import { NFTMarketContext } from "../context/NFTMarketContext";
 
 function ProfilePage() {
-	const web3Context = useContext(Web3Context);
-	const {
-		creator,
-		creatorAddress,
-		loadingNFT,
-		currentUserNFTs,
-		currentUserNFTOnMarketplace,
-		currentUserNFTsBoughtOnMarketplace,
-	} = web3Context;
+	const creatorsContext = useContext(CreatorsContext);
+	const { creator, creatorAddress } = creatorsContext;
 	const { username, name, bio, profilePicUrl, royaltyEarned } = creator;
+
+	const nftContext = useContext(NFTContext);
+	const { loadingNFT, currentUserNFTs } = nftContext;
+
+	const nftMarketContext = useContext(NFTMarketContext);
+	const { currentUserNFTOnMarketplace, currentUserNFTsBoughtOnMarketplace } =
+		nftMarketContext;
 
 	const [userOwnedNFT, setUserOwnedNFT] = useState(null);
 	const bg = useColorModeValue("brand.100", "brand.700");
 
 	useEffect(() => {
-		const {
-			getNFTsOwnerByUserUsingSigner,
-			fetchItemsCreatedUsingSigner,
-			fetchMyNFTsUsingSigner,
-		} = web3Context;
+		const { getNFTsOwnerByUserUsingSigner } = nftContext;
+		const { fetchItemsCreatedUsingSigner, fetchMyNFTsUsingSigner } =
+			nftMarketContext;
 		if (creatorAddress != null && creator != null) {
 			getNFTsOwnerByUserUsingSigner();
 			fetchItemsCreatedUsingSigner();
@@ -63,7 +63,6 @@ function ProfilePage() {
 			]);
 		}
 	}, [currentUserNFTs, currentUserNFTsBoughtOnMarketplace]);
-
 	return (
 		<VStack width="100%" padding={0}>
 			<ProfileHeader username={username} profilePicUrl={profilePicUrl} />

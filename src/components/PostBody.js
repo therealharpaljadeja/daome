@@ -11,6 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { useContext } from "react";
 import { Web3Context } from "../context/Web3Context";
+import { NFTMarketContext } from "../context/NFTMarketContext";
+import { NFTContext } from "../context/NFTContext";
+
 import SellNFTModal from "./SellNFTModal";
 import { ethers } from "ethers";
 import { FiExternalLink } from "react-icons/fi";
@@ -28,13 +31,14 @@ function PostBody({
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const web3Context = useContext(Web3Context);
-	const {
-		account,
-		creatingMarketSale,
-		approveToMarketplaceUsingSigner,
-		approvingToMarketplace,
-		createSaleUsingSigner,
-	} = web3Context;
+	const { account } = web3Context;
+
+	const nftContext = useContext(NFTContext);
+	const { approveToMarketplaceUsingSigner, approvingToMarketplace } =
+		nftContext;
+
+	const nftMarketContext = useContext(NFTMarketContext);
+	const { creatingMarketSale, createSaleUsingSigner } = nftMarketContext;
 
 	return (
 		<VStack
