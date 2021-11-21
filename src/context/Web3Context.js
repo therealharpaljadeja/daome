@@ -23,14 +23,7 @@ import {
 	registerUser,
 	getCreatorObjFromAddress,
 } from "../utils/Creators";
-import {
-	createMarketItem,
-	createSale,
-	fetchItemsCreated,
-	fetchMarketItems,
-	fetchMyNFTs,
-	getMarketItemByItemId,
-} from "../utils/NFTMarket";
+
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
 import { BsCheck2 } from "react-icons/bs";
 
@@ -42,7 +35,6 @@ const validNetworkOptions = {
 	nativeCurrency: { name: "Celo", symbol: "CELO", decimals: 18 },
 	rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
 	blockExplorerUrls: ["https://alfajores-blockscout.celo-testnet.orgs"],
-	// iconUrls: ['future']
 };
 
 export function Web3ContextProvider({ children }) {
@@ -58,20 +50,6 @@ export function Web3ContextProvider({ children }) {
 	const [creator, setCreator] = useState({});
 	const [creatorAddress, setCreatorAddress] = useState(null);
 	const [checkingUserRegistered, setCheckingUserRegistered] = useState(false);
-	const [fetchingMarketItems, setFetchingMarketItems] = useState(false);
-	const [fetchingItemsCreated, setFetchingItemsCreated] = useState(false);
-	const [fetchingMyNFTs, setFetchingMyNFTs] = useState(false);
-	const [creatingMarketSale, setCreatingMarketSale] = useState(false);
-	const [currentUserNFTs, setCurrentUserNFTs] = useState(null);
-	const [currentUserNFTOnMarketplace, setCurrentUserNFTOnMarketplace] =
-		useState(null);
-	const [marketItems, setMarketItems] = useState(null);
-	const [creatingMarketItem, setCreatingMarketItem] = useState(false);
-	const [
-		currentUserNFTsBoughtOnMarketplace,
-		setCurrentUserNFTsBoughtOnMarketplace,
-	] = useState(null);
-	const [gettingItem, setGettingItem] = useState(false);
 	const [transactionLink, setTransactionLink] = useState(null);
 
 	useEffect(() => {
@@ -184,50 +162,6 @@ export function Web3ContextProvider({ children }) {
 		}
 	}
 
-	async function fetchMarketItemsUsingSigner() {
-		setFetchingMarketItems(true);
-		let result = await fetchMarketItems(wallet);
-		setMarketItems(result);
-		setFetchingMarketItems(false);
-	}
-
-	async function fetchItemsCreatedUsingSigner() {
-		setFetchingItemsCreated(true);
-		let result = await fetchItemsCreated(wallet);
-		setCurrentUserNFTOnMarketplace(result);
-		setFetchingItemsCreated(false);
-	}
-
-	async function fetchMyNFTsUsingSigner() {
-		setFetchingMyNFTs(true);
-		let result = await fetchMyNFTs(wallet);
-		setCurrentUserNFTsBoughtOnMarketplace(result);
-		setFetchingMyNFTs(false);
-	}
-
-	async function createMarketItemUsingSigner(
-		collectionAddress,
-		tokenId,
-		price
-	) {
-		setCreatingMarketItem(true);
-		await createMarketItem(wallet, collectionAddress, tokenId, price);
-		setCreatingMarketItem(false);
-	}
-
-	async function createSaleUsingSigner(collectionAddress, tokenId, price) {
-		setCreatingMarketSale(true);
-		await createSale(wallet, collectionAddress, tokenId, price);
-		setCreatingMarketSale(false);
-	}
-
-	async function getMarketItemByIdUsingSigner(itemId) {
-		setGettingItem(true);
-		let nft = await getMarketItemByItemId(wallet, itemId);
-		setGettingItem(false);
-		return nft;
-	}
-
 	return (
 		<Web3Context.Provider
 			value={{
@@ -240,37 +174,11 @@ export function Web3ContextProvider({ children }) {
 				userRegistered,
 				creator,
 				creatorAddress,
-				isMintingNFT,
-				fetchingMarketItems,
-				fetchingItemsCreated,
-				fetchingMyNFTs,
-				creatingMarketSale,
-				loadingNFT,
-				currentUserNFTs,
-				currentUserNFTOnMarketplace,
-				marketItems,
-				gettingMetadata,
-				approvingToMarketplace,
-				creatingMarketItem,
-				currentUserNFTsBoughtOnMarketplace,
 				wallet,
-				withdrawingRoyalty,
-				gettingItem,
 				connectWallet,
 				requestNetworkChange,
-				fetchMarketItemsUsingSigner,
-				fetchItemsCreatedUsingSigner,
-				fetchMyNFTsUsingSigner,
-				createSaleUsingSigner,
-				getNFTsOwnerByUserUsingSigner,
-				mintNFTUsingSigner,
 				getCreatorAddressFromUsername,
 				registerCreator,
-				nftMetadataUsingSigner,
-				approveToMarketplaceUsingSigner,
-				createMarketItemUsingSigner,
-				getMarketItemByIdUsingSigner,
-				withdrawRoyaltyUsingSigner,
 			}}
 		>
 			<Modal isOpen={isOpen} isCentered onClose={onClose}>

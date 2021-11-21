@@ -19,7 +19,12 @@ export function NFTMarketContextProvider({ children }) {
 		setCurrentUserNFTsBoughtOnMarketplace,
 	] = useState(null);
 	const [creatingMarketItem, setCreatingMarketItem] = useState(false);
+	const [marketItems, setMarketItems] = useState(null);
+
 	const [creatingMarketSale, setCreatingMarketSale] = useState(false);
+	const [fetchingMyNFTs, setFetchingMyNFTs] = useState(false);
+	const [fetchingItemsCreated, setFetchingItemsCreated] = useState(false);
+
 	const [gettingItem, setGettingItem] = useState(false);
 
 	async function fetchMarketItemsUsingSigner() {
@@ -75,6 +80,8 @@ export function NFTMarketContextProvider({ children }) {
 				creatingMarketItem,
 				creatingMarketSale,
 				gettingItem,
+				fetchingMyNFTs,
+				fetchingItemsCreated,
 				fetchMarketItemsUsingSigner,
 				fetchItemsCreatedUsingSigner,
 				fetchMyNFTsUsingSigner,
