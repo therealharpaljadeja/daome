@@ -7,10 +7,14 @@ import {
 	fetchMyNFTs,
 	getMarketItemByItemId,
 } from "../utils/NFTMarket";
+import { Web3Context } from "./Web3Context";
 
 export const NFTMarketContext = React.createContext(null);
 
 export function NFTMarketContextProvider({ children }) {
+	const web3Context = useContext(Web3Context);
+	const { wallet } = web3Context;
+
 	const [fetchingMarketItems, setFetchingMarketItems] = useState(false);
 	const [currentUserNFTOnMarketplace, setCurrentUserNFTOnMarketplace] =
 		useState(null);

@@ -16,13 +16,6 @@ import {
 	useDisclosure,
 	useColorModeValue,
 } from "@chakra-ui/react";
-import {
-	isUserRegistered,
-	getCreatorAddressBySender,
-	getCreatorAddressByUsername,
-	registerUser,
-	getCreatorObjFromAddress,
-} from "../utils/Creators";
 
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
 import { BsCheck2 } from "react-icons/bs";
@@ -46,10 +39,6 @@ export function Web3ContextProvider({ children }) {
 	const [connectingAccount, setConnectingAccount] = useState(false);
 	const [provider, setProvider] = useState(null);
 	const [chainId, setChainId] = useState(null);
-	const [userRegistered, setUserRegistered] = useState(null);
-	const [creator, setCreator] = useState({});
-	const [creatorAddress, setCreatorAddress] = useState(null);
-	const [checkingUserRegistered, setCheckingUserRegistered] = useState(false);
 	const [transactionLink, setTransactionLink] = useState(null);
 
 	useEffect(() => {
@@ -74,58 +63,10 @@ export function Web3ContextProvider({ children }) {
 	}, []);
 
 	useEffect(() => {
-		if (account !== null && chainId === validNetworkOptions.chainId) {
-			setCheckingUserRegistered(true);
-			const init = async () => {
-				async function checkUserRegistered() {
-					let result = await isUserRegistered(wallet);
-					return result;
-				}
-
-				checkUserRegistered().then((result) => {
-					setUserRegistered(result);
-					setCheckingUserRegistered(true);
-				});
-			};
-			init();
-		}
-	}, [account]);
-
-	useEffect(() => {
 		if (wallet !== null) {
 			setChainId(wallet.provider.chainId);
 		}
 	}, [wallet]);
-
-	useEffect(() => {
-		if (
-			userRegistered !== null &&
-			userRegistered !== false &&
-			wallet !== null
-		) {
-			async function getCreatorAddressBySenderUsingSigner() {
-				getCreatorAddressBySender(wallet).then((result) => {
-					setCreatorAddress(result);
-				});
-			}
-
-			getCreatorAddressBySenderUsingSigner();
-		}
-	}, [userRegistered, wallet]);
-
-	useEffect(() => {
-		if (creatorAddress !== null && wallet !== null && provider != null) {
-			async function getCreatorObjUsingSigner() {
-				getCreatorObjFromAddress(wallet, creatorAddress, provider).then(
-					(result) => {
-						setCreator(result);
-					}
-				);
-			}
-
-			getCreatorObjUsingSigner();
-		}
-	}, [creatorAddress, wallet, provider]);
 
 	async function connectWallet() {
 		setConnectingAccount(true);
@@ -150,18 +91,6 @@ export function Web3ContextProvider({ children }) {
 		});
 	}
 
-	async function getCreatorAddressFromUsername(username) {
-		let result = await getCreatorAddressByUsername(wallet, username);
-		return result;
-	}
-
-	async function registerCreator(creator) {
-		const result = await registerUser(wallet, creator);
-		if (result.hash !== undefined) {
-			setUserRegistered(true);
-		}
-	}
-
 	return (
 		<Web3Context.Provider
 			value={{
@@ -170,15 +99,9 @@ export function Web3ContextProvider({ children }) {
 				chainId,
 				connectingAccount,
 				account,
-				checkingUserRegistered,
-				userRegistered,
-				creator,
-				creatorAddress,
 				wallet,
 				connectWallet,
 				requestNetworkChange,
-				getCreatorAddressFromUsername,
-				registerCreator,
 			}}
 		>
 			<Modal isOpen={isOpen} isCentered onClose={onClose}>
