@@ -23,17 +23,38 @@ contract NFTMarket is ReentrancyGuard {
         owner = payable(msg.sender);
     }
 
+    struct Bid {
+        uint256 bidId;
+        uint256 itemId;
+        address payable bidder;
+        uint256 amount;
+        uint256 price;
+        bool active;
+    }
+
     struct MarketItem {
         uint256 itemId;
         address nftContract;
         uint256 tokenId;
         address payable seller;
+        address payable royaltyReceiver;
+        uint256 royaltyPercentage;
         address owner;
         uint256 price;
         bool sold;
     }
 
     mapping(uint256 => MarketItem) public idToMarketItem;
+    mapping(uint256 => mapping(uint256 => Bid)) private idToBid;
+    mapping(uint256 => Counters.Counter) private itemToBidCounter;
+
+    modifier onlySeller(uint256 itemId) {
+        require(
+            idToMarketItem[itemId].seller == msg.sender,
+            "Only the seller can do this"
+        );
+        _;
+    }
 
     event MarketItemCreated(
         uint256 indexed itemId,
@@ -45,12 +66,30 @@ contract NFTMarket is ReentrancyGuard {
         bool sold
     );
 
+    event MarketItemSold(
+        uint256 indexed itemId,
+        address indexed nftContract,
+        uint256 indexed tokenId,
+        address seller,
+        address buyer,
+        uint256 amount,
+        uint256 price
+    );
+
+    event BidAdded(
+        uint256 indexed itemId,
+        uint256 indexed bidId,
+        address bidder,
+        uint256 amount,
+        uint256 price
+    );
+
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
     }
 
     function createMarketItem(
-        address nftContract,
+        address payable nftContract,
         uint256 tokenId,
         uint256 price
     ) public payable nonReentrant {
@@ -62,12 +101,16 @@ contract NFTMarket is ReentrancyGuard {
 
         _itemIds.increment();
         uint256 itemId = _itemIds.current();
+        uint256 royaltyPercentage = NFT(nftContract)._royalties[tokenId];
+        address royaltyReceiver = NFT(nftContract)._royaltyReceiver[tokenId];
 
         idToMarketItem[itemId] = MarketItem(
             itemId,
             nftContract,
             tokenId,
             payable(msg.sender),
+            royaltyPercentage,
+            royaltyReceiver,
             address(this),
             price,
             false

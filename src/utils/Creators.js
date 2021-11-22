@@ -75,7 +75,6 @@ export const getCreatorObjFromAddress = async (
 	let royaltyEarned = ethers.utils.formatEther(
 		(await provider.getBalance(nftCollectionAddress)).toString()
 	);
-
 	return {
 		username,
 		name,

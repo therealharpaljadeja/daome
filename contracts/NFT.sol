@@ -5,16 +5,23 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Creator.sol";
 
 contract NFT is ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     mapping(uint256 => string) _tokenURIs;
-    mapping(uint256 => uint256) _royalties;
+    mapping(uint256 => uint256) public _royalties;
+    mapping(uint256 => address) public _royaltyReceiver;
 
-    constructor(string memory collectionName, string memory collectionSymbol)
-        ERC721(collectionName, collectionSymbol)
-    {}
+    constructor(
+        address _creator,
+        string memory collectionName,
+        string memory collectionSymbol
+    ) ERC721(collectionName, collectionSymbol) {
+        Creator creator = Creator(_creator);
+        creator.setNFTCollectionAddress(address(this));
+    }
 
     function createToken(string memory _tokenURI, uint256 royaltyPercentage)
         public
@@ -26,6 +33,7 @@ contract NFT is ERC721Enumerable, Ownable {
         _mint(msg.sender, newItemId);
         _tokenURIs[newItemId] = _tokenURI;
         _royalties[newItemId] = royaltyPercentage;
+        _royaltyReceiver[newItemId] = msg.sender;
         return newItemId;
     }
 

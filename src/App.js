@@ -69,7 +69,13 @@ function App() {
 										</Route>
 										<Route
 											exact
-											path="/nft/:creator/:address/:id"
+											path="/nft/:creatoraddress/:address/:id"
+										>
+											<PostPage />
+										</Route>
+										<Route
+											exact
+											path="/nft/marketplace/:creator/:address/:itemid"
 										>
 											<PostPage />
 										</Route>

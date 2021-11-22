@@ -7,29 +7,48 @@ import { useEffect, useContext, useState } from "react";
 import { Web3Context } from "../context/Web3Context";
 import { useParams } from "react-router-dom";
 import { NFTContext } from "../context/NFTContext";
+import { CreatorsContext } from "../context/CreatorsContext";
+import { NFTMarketContext } from "../context/NFTMarketContext";
 
 function PostPage() {
-	const { creator, address, id } = useParams();
+	const { creatoraddress, address, itemid, id } = useParams();
 
 	const web3Context = useContext(Web3Context);
 	const nftContext = useContext(NFTContext);
+	const creatorsContext = useContext(CreatorsContext);
+	const nftMarketContext = useContext(NFTMarketContext);
 	const [nft, setNFT] = useState(null);
-
+	console.log("loading nft");
 	useEffect(() => {
-		const { provider } = web3Context;
+		const { provider, account } = web3Context;
 		const { nftMetadataUsingSigner } = nftContext;
+		const { getMarketItemByIdUsingSigner } = nftMarketContext;
 		(async () => {
-			if (provider != null) {
-				let nft = await nftMetadataUsingSigner(creator, address, id);
-				console.log(nft);
-				setNFT(nft);
+			console.log(account);
+			if (provider != null && account != null) {
+				if (id != null) {
+					let nft = await nftMetadataUsingSigner(
+						creatoraddress,
+						address,
+						id
+					);
+					setNFT(nft);
+				} else {
+					console.log(itemid);
+					let nft = await getMarketItemByIdUsingSigner(itemid);
+					setNFT(nft);
+				}
 			}
 		})();
-	}, [address, creator, id]);
+	}, [address, creatoraddress, id]);
 
 	return (
 		<VStack spacing={0} alignItems="center" width="100%">
-			<Post nft={nft} id={id} isExpanded={false} />
+			<Post
+				nft={nft}
+				id={id !== undefined ? id : itemid}
+				isExpanded={false}
+			/>
 			{/* <Tabs isFitted width="100%">
                 <TabList>
                     <Tab>Comments</Tab>

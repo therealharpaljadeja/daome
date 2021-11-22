@@ -21,14 +21,19 @@ export const CreatorsContext = React.createContext(null);
 export function CreatorsContextProvider({ children }) {
 	const web3Context = useContext(Web3Context);
 	const { account, wallet, provider, chainId } = web3Context;
-
+	console.log(account, wallet, provider, chainId);
 	const [checkingUserRegistered, setCheckingUserRegistered] = useState(false);
 	const [creatorAddress, setCreatorAddress] = useState(null);
 	const [creator, setCreator] = useState({});
 	const [userRegistered, setUserRegistered] = useState(null);
 
 	useEffect(() => {
-		if (account !== null && chainId === validNetworkOptions.chainId) {
+		console.log(chainId);
+		if (
+			account !== null &&
+			wallet !== null &&
+			chainId === validNetworkOptions.chainId
+		) {
 			setCheckingUserRegistered(true);
 			const init = async () => {
 				async function checkUserRegistered() {
@@ -43,7 +48,7 @@ export function CreatorsContextProvider({ children }) {
 			};
 			init();
 		}
-	}, [account]);
+	}, [account, wallet, chainId]);
 
 	useEffect(() => {
 		if (
@@ -58,20 +63,21 @@ export function CreatorsContextProvider({ children }) {
 			}
 			getCreatorAddressBySenderUsingSigner();
 		}
-	}, [userRegistered, wallet]);
+	}, [userRegistered]);
 
 	useEffect(() => {
 		if (creatorAddress !== null && wallet !== null && provider != null) {
 			async function getCreatorObjUsingSigner() {
 				getCreatorObjFromAddress(wallet, creatorAddress, provider).then(
 					(result) => {
+						console.log(result);
 						setCreator(result);
 					}
 				);
 			}
 			getCreatorObjUsingSigner();
 		}
-	}, [creatorAddress, wallet, provider]);
+	}, [creatorAddress]);
 
 	async function getCreatorAddressFromUsername(username) {
 		let result = await getCreatorAddressByUsername(wallet, username);
@@ -83,6 +89,11 @@ export function CreatorsContextProvider({ children }) {
 		if (result.hash !== undefined) {
 			setUserRegistered(true);
 		}
+	}
+
+	async function checkUserRegistered() {
+		let result = await isUserRegistered(wallet);
+		return result;
 	}
 
 	return (

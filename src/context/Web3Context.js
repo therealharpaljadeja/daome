@@ -55,7 +55,9 @@ export function Web3ContextProvider({ children }) {
 			});
 
 			window.ethereum.on("accountsChanged", (accounts) => {
-				setAccount(accounts[0]);
+				window.location.reload();
+				// setWallet(new providers.Web3Provider(window.ethereum));
+				// setAccount(accounts[0]);
 			});
 		} else {
 			setMetamaskInstalled(false);
@@ -63,10 +65,11 @@ export function Web3ContextProvider({ children }) {
 	}, []);
 
 	useEffect(() => {
+		console.log("set chain id");
 		if (wallet !== null) {
 			setChainId(wallet.provider.chainId);
 		}
-	}, [wallet]);
+	}, [account]);
 
 	async function connectWallet() {
 		setConnectingAccount(true);

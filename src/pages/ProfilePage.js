@@ -182,17 +182,17 @@ function ProfilePage() {
 												>
 													{currentUserNFTOnMarketplace.map(
 														(nft) => {
-															let toUrl = `/nft/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
+															let toUrl = `/nft/marketplace/${nft.creatorAddress}/${nft.collectionAddress}/${nft.itemId}`;
 															return (
 																<Link
 																	key={
-																		nft.tokenId
+																		nft.itemId
 																	}
 																	to={toUrl}
 																>
 																	<Image
 																		key={
-																			nft.tokenId
+																			nft.itemId
 																		}
 																		src={
 																			nft.image
