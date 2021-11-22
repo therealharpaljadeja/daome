@@ -18,7 +18,7 @@ function Feed() {
 		<VStack width="100%" alignItems="center">
 			{fetchingMarketItems === true ? (
 				<Spinner />
-			) : marketItems !== undefined ? (
+			) : marketItems !== null ? (
 				marketItems.length !== 0 ? (
 					<>
 						{marketItems.map((item) => {

@@ -86,6 +86,7 @@ export function NFTMarketContextProvider({ children }) {
 				gettingItem,
 				fetchingMyNFTs,
 				fetchingItemsCreated,
+				marketItems,
 				fetchMarketItemsUsingSigner,
 				fetchItemsCreatedUsingSigner,
 				fetchMyNFTsUsingSigner,
