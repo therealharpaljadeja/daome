@@ -43,13 +43,9 @@ function OnboardingModal({ isOpen, onClose, accountAddress }) {
 			profilePicUrl,
 			nftCollectionName,
 			nftCollectionSymbol,
-			// tokenName,
-			// tokenSymbol,
-			// totalSupply
 		};
 
 		await registerCreator(creator);
-
 		await checkUserRegistered();
 		setRegisteringUser(false);
 	};

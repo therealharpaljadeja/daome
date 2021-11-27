@@ -18,17 +18,30 @@ export function NFTContextProvider({ children }) {
 	const creatorsContext = useContext(CreatorsContext);
 	const { creatorAddress, creator } = creatorsContext;
 
-	const [isMintingNFT, setIsMintingNFT] = useState(false);
 	const [loadingNFT, setLoadingNFT] = useState(false);
 	const [gettingMetadata, setGettingMetadata] = useState(null);
 	const [approvingToMarketplace, setApprovingToMarketplace] = useState(false);
 	const [withdrawingRoyalty, setWithdrawingRoyalty] = useState(false);
 	const [currentUserNFTs, setCurrentUserNFTs] = useState(null);
 
-	async function mintNFTUsingSigner(tokenURI, royaltyPercentage) {
-		setIsMintingNFT(true);
-		await mintNFT(wallet, creatorAddress, tokenURI, royaltyPercentage);
-		setIsMintingNFT(false);
+	async function mintNFTUsingSigner(
+		tokenURI,
+		royaltyPercentage,
+		modalCloser
+	) {
+		try {
+			let tx = await mintNFT(
+				wallet,
+				creatorAddress,
+				tokenURI,
+				royaltyPercentage
+			);
+			return tx;
+		} catch (e) {
+			console.log(e);
+		} finally {
+			modalCloser();
+		}
 	}
 
 	async function getNFTsOwnerByUserUsingSigner() {
@@ -57,7 +70,12 @@ export function NFTContextProvider({ children }) {
 	async function approveToMarketplaceUsingSigner(collectionAddress, tokenId) {
 		setApprovingToMarketplace(true);
 		try {
-			await approveToMarketplace(wallet, collectionAddress, tokenId);
+			let tx = await approveToMarketplace(
+				wallet,
+				collectionAddress,
+				tokenId
+			);
+			await tx.wait();
 		} catch (e) {
 			console.log(e);
 		} finally {
@@ -74,7 +92,6 @@ export function NFTContextProvider({ children }) {
 	return (
 		<NFTContext.Provider
 			value={{
-				isMintingNFT,
 				loadingNFT,
 				gettingMetadata,
 				approvingToMarketplace,

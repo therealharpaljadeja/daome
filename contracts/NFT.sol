@@ -14,14 +14,9 @@ contract NFT is ERC721Enumerable, Ownable {
     mapping(uint256 => uint256) public _royalties;
     mapping(uint256 => address) public _royaltyReceiver;
 
-    constructor(
-        address _creator,
-        string memory collectionName,
-        string memory collectionSymbol
-    ) ERC721(collectionName, collectionSymbol) {
-        Creator creator = Creator(_creator);
-        creator.setNFTCollectionAddress(address(this));
-    }
+    constructor(string memory collectionName, string memory collectionSymbol)
+        ERC721(collectionName, collectionSymbol)
+    {}
 
     function createToken(string memory _tokenURI, uint256 royaltyPercentage)
         public
@@ -73,6 +68,14 @@ contract NFT is ERC721Enumerable, Ownable {
         returns (uint256)
     {
         return _royalties[tokenId];
+    }
+
+    function getRoyaltyReceiver(uint256 tokenId)
+        external
+        view
+        returns (address)
+    {
+        return _royaltyReceiver[tokenId];
     }
 
     receive() external payable {}

@@ -32,7 +32,8 @@ export const registerUser = async (wallet, creator) => {
 		Creators.abi,
 		signer
 	);
-	let result = await creatorsContract.registerUser(
+
+	let tx = await creatorsContract.registerUser(
 		creator.username,
 		creator.name,
 		creator.bio,
@@ -40,7 +41,8 @@ export const registerUser = async (wallet, creator) => {
 		creator.nftCollectionName,
 		creator.nftCollectionSymbol
 	);
-	return result;
+
+	return tx;
 };
 
 export const getCreatorAddressBySender = async (wallet) => {
@@ -51,6 +53,7 @@ export const getCreatorAddressBySender = async (wallet) => {
 		signer
 	);
 	let result = await creatorsContract.getCreatorAddressBySender();
+	console.log(result);
 	return result;
 };
 
@@ -60,21 +63,26 @@ export const getCreatorObjFromAddress = async (
 	provider
 ) => {
 	const signer = await wallet.getSigner();
+
 	const creatorContract = new ethers.Contract(
 		contractAddress,
 		Creator.abi,
 		signer
 	);
+
 	let username = await creatorContract.username();
 	let name = await creatorContract.name();
 	let bio = await creatorContract.bio();
+
 	let profilePicUrl = await creatorContract.profilePicUrl();
 	let nftCollectionName = await creatorContract.nftCollectionName();
 	let nftCollectionSymbol = await creatorContract.nftCollectionSymbol();
 	let nftCollectionAddress = await creatorContract.nftCollectionAddress();
+
 	let royaltyEarned = ethers.utils.formatEther(
 		(await provider.getBalance(nftCollectionAddress)).toString()
 	);
+
 	return {
 		username,
 		name,

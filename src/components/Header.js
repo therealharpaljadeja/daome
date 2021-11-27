@@ -19,7 +19,6 @@ function Header() {
 	const { creator } = creatorsContext;
 	const bg = useColorModeValue("white", "var(--chakra-colors-gray-800)");
 	const color = useColorModeValue("var(--chakra-colors-gray-800)", "white");
-	console.log(creator);
 	return (
 		<>
 			<ProfileSettingsModal isOpen={isOpen} onClose={onClose} />
@@ -48,7 +47,10 @@ function Header() {
 					onClick={onOpen}
 					variant="ghost"
 					colorScheme="whiteAlpha"
-					disabled={Object.keys(creator).length === 0}
+					disabled={
+						(creator === null || creator === undefined) &&
+						Object.keys(creator).length === 0
+					}
 					icon={<FiSettings stroke={color} />}
 				/>
 			</HStack>

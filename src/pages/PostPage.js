@@ -36,6 +36,7 @@ function PostPage() {
 				} else {
 					console.log(itemid);
 					let nft = await getMarketItemByIdUsingSigner(itemid);
+					console.log(nft);
 					setNFT(nft);
 				}
 			}
@@ -49,25 +50,6 @@ function PostPage() {
 				id={id !== undefined ? id : itemid}
 				isExpanded={false}
 			/>
-			{/* <Tabs isFitted width="100%">
-                <TabList>
-                    <Tab>Comments</Tab>
-                    <Tab>Bids</Tab>
-                </TabList>
-                <TabPanels>
-                    <TabPanel>
-                        <Comment />
-                        <Comment />
-                        <Comment />
-                    </TabPanel>
-                    <TabPanel padding={0}>
-                        <BidHeader />
-                        <VStack width="100%" padding={4}>
-                            <Bid />
-                        </VStack>
-                    </TabPanel>
-                </TabPanels>
-            </Tabs> */}
 		</VStack>
 	);
 }

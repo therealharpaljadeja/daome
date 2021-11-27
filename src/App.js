@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 // React Components
 import Header from "./components/Header";
@@ -16,11 +16,38 @@ import { Web3Context } from "./context/Web3Context";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Chakra UI
-import { VStack, Grid, Button, useDisclosure, HStack } from "@chakra-ui/react";
+import {
+	VStack,
+	Grid,
+	Button,
+	useDisclosure,
+	HStack,
+	Spacer,
+	Modal,
+	ModalContent,
+	ModalOverlay,
+	ModalCloseButton,
+	ModalBody,
+	ModalHeader,
+	Heading,
+	useColorModeValue,
+	Box,
+	Icon,
+	Link,
+} from "@chakra-ui/react";
+import { BsCheck2 } from "react-icons/bs";
+
 import { CreatorsContext } from "./context/CreatorsContext";
+import { ContextProvider } from "@celo-tools/use-contractkit";
+import DaosPage from "./pages/DaosPage";
 
 function App() {
 	const { onClose } = useDisclosure();
+	const {
+		isOpen: isTxModalOpen,
+		onOpen: onTxModalOpen,
+		onClose: onTxModalClose,
+	} = useDisclosure();
 
 	const web3Context = useContext(Web3Context);
 	const {
@@ -29,40 +56,79 @@ function App() {
 		account,
 		connectWallet,
 		connectingAccount,
+		setOngoingTx,
+		OngoingTx,
 	} = web3Context;
 
 	const creatorsContext = useContext(CreatorsContext);
-	const { userRegistered } = creatorsContext;
+	const { creator, userRegistered } = creatorsContext;
+	console.log(creator);
 	return (
-		<Router>
-			<CustomModal
-				modalButtonOnClick={requestNetworkChange}
-				isOpen={
-					chainId !== "0xaef3" &&
-					chainId !== null &&
-					chainId !== undefined
-				}
-				onClose={onClose}
-				modalHeader="Invalid Network"
-				modalCloseButton={false}
-				modalFooterButtonText="Change Network"
-			></CustomModal>
-			<Grid
-				height="100vh"
-				width="100vw"
-				templateColumns={["1fr", "1fr 2fr 1fr"]}
+		<>
+			<Modal
+				isOpen={OngoingTx !== null}
+				isCentered
+				onClose={() => {
+					setOngoingTx(null);
+					onTxModalClose();
+				}}
 			>
-				<VStack justifyContent="space-between" spacing={0}>
-					<Header />
-					<HStack
-						width="100%"
-						height="100%"
-						alignItems="flex-start"
-						justifyContent="center"
-					>
-						{account !== null ? (
-							userRegistered !== null ? (
-								userRegistered === true ? (
+				<ModalOverlay />
+				<ModalContent margin="10px">
+					<ModalCloseButton />
+					<ModalHeader></ModalHeader>
+					<ModalBody padding="20px">
+						<VStack justifyContent="center" spacing="20px">
+							<Box
+								background={useColorModeValue(
+									"var(--chakra-colors-brand-200)",
+									"var(--chakra-colors-brand-700)"
+								)}
+								borderRadius="full"
+								padding="15px"
+							>
+								<Icon w="25px" h="25px" as={BsCheck2} />
+							</Box>
+							<Heading size="md">Transaction Successful</Heading>
+							<Link target="_blank" href={OngoingTx}>
+								<Button>View on Explorer</Button>
+							</Link>
+						</VStack>
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+
+			<Router>
+				<CustomModal
+					modalButtonOnClick={requestNetworkChange}
+					isOpen={
+						chainId !== "0xaef3" &&
+						chainId !== null &&
+						chainId !== undefined
+					}
+					onClose={onClose}
+					modalHeader="Invalid Network"
+					modalCloseButton={false}
+					modalFooterButtonText="Change Network"
+				></CustomModal>
+				<Grid
+					height="100vh"
+					width="100vw"
+					templateColumns={["1fr", "1fr 1fr 1fr"]}
+				>
+					<Spacer display={["none", "block"]} />
+					<VStack justifyContent="space-between" spacing={0}>
+						<Header />
+						<HStack
+							width="100%"
+							height="100%"
+							alignItems="flex-start"
+							justifyContent="center"
+						>
+							{account !== null ? (
+								creator !== null &&
+								creator !== undefined &&
+								Object.keys(creator).length !== 0 ? (
 									<Switch>
 										<Route exact path="/">
 											<ProfilePage />
@@ -82,6 +148,9 @@ function App() {
 										<Route exact path="/feed">
 											<Feed />
 										</Route>
+										<Route exact path="/daos">
+											<DaosPage />
+										</Route>
 									</Switch>
 								) : (
 									<OnboardingModal
@@ -90,22 +159,22 @@ function App() {
 										onClose={onClose}
 									/>
 								)
-							) : null
-						) : (
-							<Button
-								alignSelf="center"
-								isLoading={connectingAccount}
-								onClick={connectWallet}
-							>
-								Connect Wallet
-							</Button>
-						)}
-					</HStack>
+							) : (
+								<Button
+									alignSelf="center"
+									isLoading={connectingAccount}
+									onClick={connectWallet}
+								>
+									Connect Wallet
+								</Button>
+							)}
+						</HStack>
 
-					<Footer />
-				</VStack>
-			</Grid>
-		</Router>
+						<Footer />
+					</VStack>
+				</Grid>
+			</Router>
+		</>
 	);
 }
 

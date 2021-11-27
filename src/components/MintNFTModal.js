@@ -15,12 +15,14 @@ import {
 import { AiOutlineCamera } from "react-icons/ai";
 import { NFTContext } from "../context/NFTContext";
 import { NFTStorage, File } from "nft.storage";
+import { Web3Context } from "../context/Web3Context";
 
 const client = new NFTStorage({
 	token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
 });
 
 function MintNFTModal({ isOpen, onClose }) {
+	const [mintingNFT, setMintingNFT] = useState(false);
 	const [isImageUploaded] = useState(false);
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
@@ -30,7 +32,9 @@ function MintNFTModal({ isOpen, onClose }) {
 	const [uploadingMetadata, setUploadingMetadata] = useState(false);
 
 	const nftContext = useContext(NFTContext);
-	const { mintNFTUsingSigner, isMintingNFT } = nftContext;
+	const web3Context = useContext(Web3Context);
+	const { mintNFTUsingSigner } = nftContext;
+	const { setOngoingTx } = web3Context;
 
 	const imageUploadBg = useColorModeValue(
 		"var(--chakra-colors-brand-100)",
@@ -72,7 +76,12 @@ function MintNFTModal({ isOpen, onClose }) {
 			"/" +
 			metadataSplit[metadataSplit.length - 1];
 		setUploadingMetadata(false);
-		mintNFTUsingSigner(url, royaltyPercentage);
+		setMintingNFT(true);
+		let tx = await mintNFTUsingSigner(url, royaltyPercentage, onClose);
+		setOngoingTx(
+			`https://alfajores-blockscout.celo-testnet.org/tx/${tx.hash}`
+		);
+		setMintingNFT(false);
 	};
 
 	return (
@@ -83,7 +92,7 @@ function MintNFTModal({ isOpen, onClose }) {
 			modalCloseButton={true}
 			modalButtonOnClick={handleMintNFT}
 			modalFooterButtonText="Mint"
-			modalButtonLoadingState={uploadingMetadata || isMintingNFT}
+			modalButtonLoadingState={uploadingMetadata || mintingNFT}
 		>
 			<VStack spacing={5} alignItems="flex-start">
 				{isImageUploaded ? <Image /> : null}

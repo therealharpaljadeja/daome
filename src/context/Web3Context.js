@@ -1,25 +1,8 @@
 import { providers } from "ethers";
 import React, { useEffect, useState } from "react";
-import {
-	VStack,
-	Heading,
-	Modal,
-	ModalContent,
-	Button,
-	ModalOverlay,
-	ModalCloseButton,
-	ModalBody,
-	ModalHeader,
-	Box,
-	Icon,
-	Link,
-	useDisclosure,
-	useColorModeValue,
-} from "@chakra-ui/react";
 
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
-import { BsCheck2 } from "react-icons/bs";
-
+import { AiOutlineConsoleSql } from "react-icons/ai";
 export const Web3Context = React.createContext(null);
 
 const validNetworkOptions = {
@@ -27,11 +10,12 @@ const validNetworkOptions = {
 	chainName: "Alfajores Testnet",
 	nativeCurrency: { name: "Celo", symbol: "CELO", decimals: 18 },
 	rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
-	blockExplorerUrls: ["https://alfajores-blockscout.celo-testnet.orgs"],
+	blockExplorerUrls: ["https://alfajores-blockscout.celo-testnet.org"],
 };
 
 export function Web3ContextProvider({ children }) {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [OngoingTx, setOngoingTx] = useState(null);
+	const [transactionLink, setTransactionLink] = useState(null);
 
 	const [metamaskInstalled, setMetamaskInstalled] = useState(false);
 	const [wallet, setWallet] = useState(null);
@@ -39,25 +23,23 @@ export function Web3ContextProvider({ children }) {
 	const [connectingAccount, setConnectingAccount] = useState(false);
 	const [provider, setProvider] = useState(null);
 	const [chainId, setChainId] = useState(null);
-	const [transactionLink, setTransactionLink] = useState(null);
 
 	useEffect(() => {
 		if (window.ethereum !== undefined) {
+			console.log("start");
 			setMetamaskInstalled(true);
 			const provider = new CeloProvider(
 				"https://alfajores-forno.celo-testnet.org"
 			);
 			setProvider(provider);
 			setWallet(new providers.Web3Provider(window.ethereum));
-
+			setChainId(window.ethereum.chainId);
 			window.ethereum.on("chainChanged", (chainId) => {
-				setChainId(chainId);
+				window.location.reload();
 			});
 
 			window.ethereum.on("accountsChanged", (accounts) => {
 				window.location.reload();
-				// setWallet(new providers.Web3Provider(window.ethereum));
-				// setAccount(accounts[0]);
 			});
 		} else {
 			setMetamaskInstalled(false);
@@ -65,19 +47,22 @@ export function Web3ContextProvider({ children }) {
 	}, []);
 
 	useEffect(() => {
-		console.log("set chain id");
-		if (wallet !== null) {
-			setChainId(wallet.provider.chainId);
+		console.log(window.ethereum.chainId);
+		if (window.ethereum.chainId !== null) {
+			setChainId(window.ethereum.chainId);
 		}
-	}, [account]);
+	}, [window.ethereum.chainId]);
 
 	async function connectWallet() {
 		setConnectingAccount(true);
+		console.log(chainId);
+
 		window.ethereum
 			.request({
 				method: "eth_requestAccounts",
 			})
 			.then((accounts) => {
+				console.log("connected");
 				setConnectingAccount(false);
 				setAccount(accounts[0]);
 			})
@@ -97,41 +82,20 @@ export function Web3ContextProvider({ children }) {
 	return (
 		<Web3Context.Provider
 			value={{
+				OngoingTx,
 				metamaskInstalled,
 				provider,
 				chainId,
 				connectingAccount,
 				account,
 				wallet,
+				transactionLink,
+				setTransactionLink,
+				setOngoingTx,
 				connectWallet,
 				requestNetworkChange,
 			}}
 		>
-			<Modal isOpen={isOpen} isCentered onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent margin="10px">
-					<ModalCloseButton />
-					<ModalHeader></ModalHeader>
-					<ModalBody padding="20px">
-						<VStack justifyContent="center" spacing="20px">
-							<Box
-								background={useColorModeValue(
-									"var(--chakra-colors-brand-200)",
-									"var(--chakra-colors-brand-700)"
-								)}
-								borderRadius="full"
-								padding="15px"
-							>
-								<Icon w="25px" h="25px" as={BsCheck2} />
-							</Box>
-							<Heading size="md">Transaction Successful</Heading>
-							<Link href={transactionLink}>
-								<Button>View on Explorer</Button>
-							</Link>
-						</VStack>
-					</ModalBody>
-				</ModalContent>
-			</Modal>
 			{children}
 		</Web3Context.Provider>
 	);

@@ -5,6 +5,7 @@ import {
 	fetchItemsCreated,
 	fetchMarketItems,
 	fetchMyNFTs,
+	fetchListedItems,
 	getMarketItemByItemId,
 } from "../utils/NFTMarket";
 import { Web3Context } from "./Web3Context";
@@ -22,7 +23,7 @@ export function NFTMarketContextProvider({ children }) {
 		currentUserNFTsBoughtOnMarketplace,
 		setCurrentUserNFTsBoughtOnMarketplace,
 	] = useState(null);
-	const [creatingMarketItem, setCreatingMarketItem] = useState(false);
+
 	const [marketItems, setMarketItems] = useState(null);
 
 	const [creatingMarketSale, setCreatingMarketSale] = useState(false);
@@ -38,16 +39,17 @@ export function NFTMarketContextProvider({ children }) {
 		setFetchingMarketItems(false);
 	}
 
-	async function fetchItemsCreatedUsingSigner() {
+	async function fetchListedItemsUsingSigner() {
 		setFetchingItemsCreated(true);
-		let result = await fetchItemsCreated(wallet);
-		setCurrentUserNFTOnMarketplace(result);
+		let result = await fetchListedItems(wallet);
 		setFetchingItemsCreated(false);
+		setCurrentUserNFTOnMarketplace(result);
 	}
 
 	async function fetchMyNFTsUsingSigner() {
 		setFetchingMyNFTs(true);
 		let result = await fetchMyNFTs(wallet);
+		console.log(result);
 		setCurrentUserNFTsBoughtOnMarketplace(result);
 		setFetchingMyNFTs(false);
 	}
@@ -55,11 +57,22 @@ export function NFTMarketContextProvider({ children }) {
 	async function createMarketItemUsingSigner(
 		collectionAddress,
 		tokenId,
-		price
+		price,
+		modalCloser
 	) {
-		setCreatingMarketItem(true);
-		await createMarketItem(wallet, collectionAddress, tokenId, price);
-		setCreatingMarketItem(false);
+		try {
+			let tx = await createMarketItem(
+				wallet,
+				collectionAddress,
+				tokenId,
+				price
+			);
+			return tx;
+		} catch (e) {
+			console.log(e);
+		} finally {
+			modalCloser();
+		}
 	}
 
 	async function createSaleUsingSigner(collectionAddress, tokenId, price) {
@@ -81,14 +94,13 @@ export function NFTMarketContextProvider({ children }) {
 				fetchingMarketItems,
 				currentUserNFTOnMarketplace,
 				currentUserNFTsBoughtOnMarketplace,
-				creatingMarketItem,
 				creatingMarketSale,
 				gettingItem,
 				fetchingMyNFTs,
 				fetchingItemsCreated,
 				marketItems,
 				fetchMarketItemsUsingSigner,
-				fetchItemsCreatedUsingSigner,
+				fetchListedItemsUsingSigner,
 				fetchMyNFTsUsingSigner,
 				createMarketItemUsingSigner,
 				createSaleUsingSigner,

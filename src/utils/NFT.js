@@ -9,6 +9,7 @@ export const balanceOf = async (wallet, creatorAddress) => {
 	let collectionAddress = getNFTCollectionAddress(wallet, creatorAddress);
 	let nftContract = new ethers.Contract(collectionAddress, NFT.abi, signer);
 	let result = await nftContract.balanceOf(await signer.getAddress());
+	console.log(result);
 	return result;
 };
 
@@ -24,17 +25,19 @@ export const mintNFT = async (
 		creatorAddress
 	);
 	let nftContract = new ethers.Contract(collectionAddress, NFT.abi, signer);
-	let result = await nftContract.createToken(tokenURI, royaltyPercentage);
-	return result;
+	let tx = await nftContract.createToken(tokenURI, royaltyPercentage);
+	return tx;
 };
 
 export const tokenOwnedByUser = async (wallet, creatorAddress) => {
 	const signer = wallet.getSigner();
 	const ownerAddress = await signer.getAddress();
+
 	let collectionAddress = await getNFTCollectionAddress(
 		wallet,
 		creatorAddress
 	);
+
 	let nftContract = new ethers.Contract(collectionAddress, NFT.abi, signer);
 	let balanceOfOwner = await balanceOf(wallet, creatorAddress);
 	let nfts = [];
@@ -84,6 +87,7 @@ export const tokenMetadata = async (
 
 	let creator = {};
 	creator.username = await creatorContract.username();
+
 	creator.name = await creatorContract.name();
 	creator.bio = await creatorContract.bio();
 	creator.profilePicUrl = await creatorContract.profilePicUrl();
@@ -120,14 +124,17 @@ export const approveToMarketplace = async (
 ) => {
 	const signer = wallet.getSigner();
 	let nftContract = new ethers.Contract(collectionAddress, NFT.abi, signer);
-	await nftContract.approve(
+	let tx = await nftContract.approve(
 		process.env.REACT_APP_MARKETPLACE_ADDRESS,
 		tokenId
 	);
+
+	return tx;
 };
 
 export const withdrawRoyalty = async (collectionAddress, wallet) => {
 	const signer = wallet.getSigner();
 	let nftContract = new ethers.Contract(collectionAddress, NFT.abi, signer);
-	await nftContract.withdraw();
+	let tx = await nftContract.withdraw();
+	return tx;
 };

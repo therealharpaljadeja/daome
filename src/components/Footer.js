@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Web3Context } from "../context/Web3Context";
 import { CreatorsContext } from "../context/CreatorsContext";
 import { Link } from "react-router-dom";
@@ -11,12 +11,13 @@ import {
 import { FiHome } from "react-icons/fi";
 import MintNFTModal from "./MintNFTModal";
 import { IoMdAdd } from "react-icons/io";
-import { AiOutlineUser } from "react-icons/ai";
+import { HiOutlineUserGroup } from "react-icons/hi";
+import { AiOutlineConsoleSql, AiOutlineUser } from "react-icons/ai";
 
 function Footer() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const web3Context = useContext(Web3Context);
-	const { account } = web3Context;
+	const { OngoingTx, account } = web3Context;
 
 	const creatorsContext = useContext(CreatorsContext);
 	const { creator } = creatorsContext;
@@ -25,7 +26,13 @@ function Footer() {
 
 	return (
 		<>
-			<MintNFTModal isOpen={isOpen} onClose={onClose} />
+			<MintNFTModal
+				isOpen={isOpen}
+				onClose={() => {
+					console.log("Closed");
+					onClose();
+				}}
+			/>
 			<HStack
 				width="100%"
 				bottom={0}
@@ -42,9 +49,10 @@ function Footer() {
 				<Link to="/feed">
 					<Icon as={FiHome} w={5} h={5} />
 				</Link>
-				{account !== null &&
-				account !== undefined &&
-				creator !== null ? (
+				<Link to="/daos">
+					<Icon as={HiOutlineUserGroup} w={5} h={5} />
+				</Link>
+				{account !== null && account !== null && creator !== null ? (
 					<Icon onClick={onOpen} as={IoMdAdd} w={7} h={7} />
 				) : null}
 				<Link to="/">

@@ -12,25 +12,33 @@ contract Creators {
 
     event UserRegistered(address indexed userAddress, string indexed username);
 
-    constructor(address _marketplaceAddress) {
-        marketplaceAddress = _marketplaceAddress;
-    }
+    constructor() {}
 
     function registerUser(
         string memory username,
         string memory name,
         string memory bio,
-        string memory profilePicUrl
-    ) external {
+        string memory profilePicUrl,
+        string memory nftCollectionName,
+        string memory nftCollectionSymbol
+    ) external returns (address) {
         address temp = usernameToAddressMapping[username];
         require(temp == address(0), "Username already exists");
 
-        Creator creator = new Creator(username, name, bio, profilePicUrl);
+        Creator creator = new Creator(
+            username,
+            name,
+            bio,
+            profilePicUrl,
+            nftCollectionName,
+            nftCollectionSymbol
+        );
+
         creator.transferOwnership(msg.sender);
         usernameToCreatorMapping[username] = address(creator);
         addressToCreatorMapping[msg.sender] = address(creator);
-
         emit UserRegistered(msg.sender, username);
+        return address(creator);
     }
 
     function getCreatorAddressByUsername(string memory username)

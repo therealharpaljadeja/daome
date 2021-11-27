@@ -7,10 +7,11 @@ import { NFTMarketContext } from "../context/NFTMarketContext";
 
 function SellNFTModal({ isOpen, onClose, name, collectionAddress, tokenId }) {
 	const [price, setPrice] = useState(0);
-
+	const [creatingMarketItem, setCreatingMarketItem] = useState(false);
 	const nftMarketContext = useContext(NFTMarketContext);
-	const { creatingMarketItem, createMarketItemUsingSigner } =
-		nftMarketContext;
+	const { createMarketItemUsingSigner } = nftMarketContext;
+	const web3Context = useContext(Web3Context);
+	const { setOngoingTx } = web3Context;
 
 	const handleInputChange = ({ target }) => {
 		setPrice(target.value);
@@ -19,7 +20,17 @@ function SellNFTModal({ isOpen, onClose, name, collectionAddress, tokenId }) {
 	const handleSell = async () => {
 		let priceInWei = ethers.utils.parseUnits(price, "ether");
 		console.log("creating sale!");
-		createMarketItemUsingSigner(collectionAddress, tokenId, priceInWei);
+		setCreatingMarketItem(true);
+		let tx = await createMarketItemUsingSigner(
+			collectionAddress,
+			tokenId,
+			priceInWei,
+			onClose
+		);
+		setOngoingTx(
+			`https://alfajores-blockscout.celo-testnet.org/tx/${tx.hash}`
+		);
+		setCreatingMarketItem(false);
 	};
 
 	return (

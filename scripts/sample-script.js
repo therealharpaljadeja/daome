@@ -23,7 +23,7 @@ async function main() {
 
 	console.log("Deploying Creators Contract");
 	const Creators = await ethers.getContractFactory("Creators");
-	const creators = await Creators.deploy(nftMarket.address);
+	const creators = await Creators.deploy();
 	await creators.deployed();
 	console.log(`Creators deployed at ${creators.address}`);
 

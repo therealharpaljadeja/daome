@@ -43,11 +43,11 @@ function ProfilePage() {
 
 	useEffect(() => {
 		const { getNFTsOwnerByUserUsingSigner } = nftContext;
-		const { fetchItemsCreatedUsingSigner, fetchMyNFTsUsingSigner } =
+		const { fetchListedItemsUsingSigner, fetchMyNFTsUsingSigner } =
 			nftMarketContext;
 		if (creatorAddress != null && creator != null) {
 			getNFTsOwnerByUserUsingSigner();
-			fetchItemsCreatedUsingSigner();
+			fetchListedItemsUsingSigner();
 			fetchMyNFTsUsingSigner();
 		}
 	}, [creatorAddress]);
@@ -125,9 +125,7 @@ function ProfilePage() {
 															let toUrl = `/nft/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
 															return (
 																<Link
-																	key={
-																		nft.tokenId
-																	}
+																	key={index}
 																	to={toUrl}
 																>
 																	<Image
@@ -181,18 +179,19 @@ function ProfilePage() {
 													templateColumns="repeat(3, 1fr)"
 												>
 													{currentUserNFTOnMarketplace.map(
-														(nft) => {
-															let toUrl = `/nft/marketplace/${nft.creatorAddress}/${nft.collectionAddress}/${nft.itemId}`;
+														(nft, index) => {
+															console.log(
+																currentUserNFTOnMarketplace
+															);
+															let toUrl = `/nft/marketplace/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
 															return (
 																<Link
-																	key={
-																		nft.itemId
-																	}
+																	key={index}
 																	to={toUrl}
 																>
 																	<Image
 																		key={
-																			nft.itemId
+																			nft.tokenId
 																		}
 																		src={
 																			nft.image
