@@ -28,7 +28,7 @@ function MintNFTModal({ isOpen, onClose }) {
 	const [description, setDescription] = useState("");
 	const [fileObj, setFileObj] = useState(null);
 	const [royaltyPercentage, setRoyaltyPercentage] = useState(0);
-
+	const [imageFile, setImageFile] = useState(null);
 	const [uploadingMetadata, setUploadingMetadata] = useState(false);
 
 	const nftContext = useContext(NFTContext);
@@ -42,7 +42,7 @@ function MintNFTModal({ isOpen, onClose }) {
 	);
 
 	const handleImageUpload = async ({ target }) => {
-		console.log(target.files[0]);
+		setImageFile(URL.createObjectURL(target.files[0]));
 		if (target.files && target.files[0]) {
 			const reader = new window.FileReader();
 			reader.readAsArrayBuffer(target.files[0]);
@@ -68,7 +68,6 @@ function MintNFTModal({ isOpen, onClose }) {
 			image: fileObj,
 		});
 
-		console.log(metadata.url);
 		let metadataSplit = metadata.url.split("/", 4);
 		const url =
 			"https://ipfs.io/ipfs/" +
@@ -81,6 +80,7 @@ function MintNFTModal({ isOpen, onClose }) {
 		setOngoingTx(
 			`https://alfajores-blockscout.celo-testnet.org/tx/${tx.hash}`
 		);
+		setImageFile(null);
 		setMintingNFT(false);
 	};
 
@@ -94,28 +94,41 @@ function MintNFTModal({ isOpen, onClose }) {
 			modalFooterButtonText="Mint"
 			modalButtonLoadingState={uploadingMetadata || mintingNFT}
 		>
-			<VStack spacing={5} alignItems="flex-start">
-				{isImageUploaded ? <Image /> : null}
+			<VStack spacing={5} alignItems="center">
 				<FormControl>
 					<FormLabel>
-						<Box
-							w="100%"
-							h="150px"
-							background={imageUploadBg}
-							borderRadius={5}
-							padding={2}
-						>
-							<VStack
+						{imageFile !== null ? (
+							<Image
+								margin="auto"
+								width="200px"
+								height="200px"
+								textAlign="center"
+								src={imageFile}
+							/>
+						) : (
+							<Box
 								w="100%"
-								h="100%"
-								border="2px dashed"
+								h="150px"
+								background={imageUploadBg}
 								borderRadius={5}
-								justifyContent="center"
+								padding={2}
 							>
-								<Icon w="20px" h="20px" as={AiOutlineCamera} />
-								<Text>Upload Image</Text>
-							</VStack>
-						</Box>
+								<VStack
+									w="100%"
+									h="100%"
+									border="2px dashed"
+									borderRadius={5}
+									justifyContent="center"
+								>
+									<Icon
+										w="20px"
+										h="20px"
+										as={AiOutlineCamera}
+									/>
+									<Text>Upload Image</Text>
+								</VStack>
+							</Box>
+						)}
 					</FormLabel>
 					<Input
 						display="none"

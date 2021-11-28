@@ -75,10 +75,8 @@ function OnboardingModal({ isOpen, onClose, accountAddress }) {
 					metadataSplit[metadataSplit.length - 2] +
 					"/" +
 					metadataSplit[metadataSplit.length - 1];
-				console.log(url);
 
 				let response = await axios.get(url);
-				console.log(response.data);
 				let image = response.data.image;
 				let imageSplit = image.split("/", 4);
 				const imageUrl =
@@ -86,7 +84,6 @@ function OnboardingModal({ isOpen, onClose, accountAddress }) {
 					imageSplit[imageSplit.length - 2] +
 					"/" +
 					imageSplit[imageSplit.length - 1];
-				console.log(imageUrl);
 				setProfilePicUrl(imageUrl);
 			};
 		}

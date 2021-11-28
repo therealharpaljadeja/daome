@@ -13,7 +13,7 @@ import PostPage from "./pages/PostPage";
 import { Web3Context } from "./context/Web3Context";
 
 // React Router
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 // Chakra UI
 import {
@@ -62,7 +62,6 @@ function App() {
 
 	const creatorsContext = useContext(CreatorsContext);
 	const { creator, userRegistered } = creatorsContext;
-	console.log(creator);
 	return (
 		<>
 			<Modal
@@ -98,82 +97,80 @@ function App() {
 				</ModalContent>
 			</Modal>
 
-			<Router>
-				<CustomModal
-					modalButtonOnClick={requestNetworkChange}
-					isOpen={
-						chainId !== "0xaef3" &&
-						chainId !== null &&
-						chainId !== undefined
-					}
-					onClose={onClose}
-					modalHeader="Invalid Network"
-					modalCloseButton={false}
-					modalFooterButtonText="Change Network"
-				></CustomModal>
-				<Grid
-					height="100vh"
-					width="100vw"
-					templateColumns={["1fr", "1fr 1fr 1fr"]}
-				>
-					<Spacer display={["none", "block"]} />
-					<VStack justifyContent="space-between" spacing={0}>
-						<Header />
-						<HStack
-							width="100%"
-							height="100%"
-							alignItems="flex-start"
-							justifyContent="center"
-						>
-							{account !== null ? (
-								creator !== null &&
-								creator !== undefined &&
-								Object.keys(creator).length !== 0 ? (
-									<Switch>
-										<Route exact path="/">
-											<ProfilePage />
-										</Route>
-										<Route
-											exact
-											path="/nft/:creatoraddress/:address/:id"
-										>
-											<PostPage />
-										</Route>
-										<Route
-											exact
-											path="/nft/marketplace/:creator/:address/:itemid"
-										>
-											<PostPage />
-										</Route>
-										<Route exact path="/feed">
-											<Feed />
-										</Route>
-										<Route exact path="/daos">
-											<DaosPage />
-										</Route>
-									</Switch>
-								) : (
-									<OnboardingModal
-										accountAddress={account}
-										isOpen={userRegistered === false}
-										onClose={onClose}
-									/>
-								)
+			<CustomModal
+				modalButtonOnClick={requestNetworkChange}
+				isOpen={
+					chainId !== "0xaef3" &&
+					chainId !== null &&
+					chainId !== undefined
+				}
+				onClose={onClose}
+				modalHeader="Invalid Network"
+				modalCloseButton={false}
+				modalFooterButtonText="Change Network"
+			></CustomModal>
+			<Grid
+				height="100vh"
+				width="100vw"
+				templateColumns={["1fr", "1fr 1fr 1fr"]}
+			>
+				<Spacer display={["none", "block"]} />
+				<VStack justifyContent="space-between" spacing={0}>
+					<Header />
+					<HStack
+						width="100%"
+						height="100%"
+						alignItems="flex-start"
+						justifyContent="center"
+					>
+						{account !== null ? (
+							creator !== null &&
+							creator !== undefined &&
+							Object.keys(creator).length !== 0 ? (
+								<Switch>
+									<Route exact path="/">
+										<ProfilePage />
+									</Route>
+									<Route
+										exact
+										path="/nft/:creatoraddress/:address/:id"
+									>
+										<PostPage />
+									</Route>
+									<Route
+										exact
+										path="/nft/marketplace/:creator/:address/:itemid"
+									>
+										<PostPage />
+									</Route>
+									<Route exact path="/feed">
+										<Feed />
+									</Route>
+									<Route exact path="/daos">
+										<DaosPage />
+									</Route>
+								</Switch>
 							) : (
-								<Button
-									alignSelf="center"
-									isLoading={connectingAccount}
-									onClick={connectWallet}
-								>
-									Connect Wallet
-								</Button>
-							)}
-						</HStack>
+								<OnboardingModal
+									accountAddress={account}
+									isOpen={userRegistered === false}
+									onClose={onClose}
+								/>
+							)
+						) : (
+							<Button
+								alignSelf="center"
+								isLoading={connectingAccount}
+								onClick={connectWallet}
+							>
+								Connect Wallet
+							</Button>
+						)}
+					</HStack>
 
-						<Footer />
-					</VStack>
-				</Grid>
-			</Router>
+					<Footer />
+				</VStack>
+			</Grid>
 		</>
 	);
 }

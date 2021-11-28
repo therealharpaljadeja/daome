@@ -53,7 +53,6 @@ export const getCreatorAddressBySender = async (wallet) => {
 		signer
 	);
 	let result = await creatorsContract.getCreatorAddressBySender();
-	console.log(result);
 	return result;
 };
 

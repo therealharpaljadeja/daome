@@ -4,7 +4,6 @@ import PostBody from "./PostBody";
 import PostHeader from "./PostHeader";
 
 function Post({ isExpanded, nft, id }) {
-	console.log(id);
 	return (
 		<VStack width="100%">
 			<PostHeader

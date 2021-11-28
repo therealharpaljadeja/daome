@@ -180,9 +180,6 @@ function ProfilePage() {
 												>
 													{currentUserNFTOnMarketplace.map(
 														(nft, index) => {
-															console.log(
-																currentUserNFTOnMarketplace
-															);
 															let toUrl = `/nft/marketplace/${nft.creatorAddress}/${nft.collectionAddress}/${nft.tokenId}`;
 															return (
 																<Link

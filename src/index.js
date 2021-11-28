@@ -10,18 +10,20 @@ import { Web3ContextProvider } from "./context/Web3Context";
 import { NFTContextProvider } from "./context/NFTContext";
 import { NFTMarketContextProvider } from "./context/NFTMarketContext";
 import { CreatorsContextProvider } from "./context/CreatorsContext";
-
+import { BrowserRouter as Router } from "react-router-dom";
 ReactDOM.render(
 	<React.StrictMode>
 		<ChakraProvider theme={theme}>
 			<Web3ContextProvider>
-				<CreatorsContextProvider>
-					<NFTContextProvider>
-						<NFTMarketContextProvider>
-							<App />
-						</NFTMarketContextProvider>
-					</NFTContextProvider>
-				</CreatorsContextProvider>
+				<Router>
+					<CreatorsContextProvider>
+						<NFTContextProvider>
+							<NFTMarketContextProvider>
+								<App />
+							</NFTMarketContextProvider>
+						</NFTContextProvider>
+					</CreatorsContextProvider>
+				</Router>
 			</Web3ContextProvider>
 		</ChakraProvider>
 	</React.StrictMode>,

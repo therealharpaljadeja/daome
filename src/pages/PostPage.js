@@ -18,13 +18,11 @@ function PostPage() {
 	const creatorsContext = useContext(CreatorsContext);
 	const nftMarketContext = useContext(NFTMarketContext);
 	const [nft, setNFT] = useState(null);
-	console.log("loading nft");
 	useEffect(() => {
 		const { provider, account } = web3Context;
 		const { nftMetadataUsingSigner } = nftContext;
 		const { getMarketItemByIdUsingSigner } = nftMarketContext;
 		(async () => {
-			console.log(account);
 			if (provider != null && account != null) {
 				if (id != null) {
 					let nft = await nftMetadataUsingSigner(
@@ -34,9 +32,7 @@ function PostPage() {
 					);
 					setNFT(nft);
 				} else {
-					console.log(itemid);
 					let nft = await getMarketItemByIdUsingSigner(itemid);
-					console.log(nft);
 					setNFT(nft);
 				}
 			}

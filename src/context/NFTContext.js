@@ -8,10 +8,11 @@ import {
 } from "../utils/NFT";
 import { CreatorsContext } from "./CreatorsContext";
 import { Web3Context } from "./Web3Context";
-
+import { useHistory } from "react-router-dom";
 export const NFTContext = React.createContext(null);
 
 export function NFTContextProvider({ children }) {
+	const history = useHistory();
 	const web3Context = useContext(Web3Context);
 	const { wallet } = web3Context;
 
@@ -38,7 +39,6 @@ export function NFTContextProvider({ children }) {
 			);
 			return tx;
 		} catch (e) {
-			console.log(e);
 		} finally {
 			modalCloser();
 		}
@@ -76,8 +76,8 @@ export function NFTContextProvider({ children }) {
 				tokenId
 			);
 			await tx.wait();
+			history.push("/");
 		} catch (e) {
-			console.log(e);
 		} finally {
 			setApprovingToMarketplace(false);
 		}

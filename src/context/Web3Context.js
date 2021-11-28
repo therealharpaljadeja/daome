@@ -26,7 +26,6 @@ export function Web3ContextProvider({ children }) {
 
 	useEffect(() => {
 		if (window.ethereum !== undefined) {
-			console.log("start");
 			setMetamaskInstalled(true);
 			const provider = new CeloProvider(
 				"https://alfajores-forno.celo-testnet.org"
@@ -47,7 +46,6 @@ export function Web3ContextProvider({ children }) {
 	}, []);
 
 	useEffect(() => {
-		console.log(window.ethereum.chainId);
 		if (window.ethereum.chainId !== null) {
 			setChainId(window.ethereum.chainId);
 		}
@@ -55,24 +53,19 @@ export function Web3ContextProvider({ children }) {
 
 	async function connectWallet() {
 		setConnectingAccount(true);
-		console.log(chainId);
 
 		window.ethereum
 			.request({
 				method: "eth_requestAccounts",
 			})
 			.then((accounts) => {
-				console.log("connected");
 				setConnectingAccount(false);
 				setAccount(accounts[0]);
 			})
-			.catch((error) => {
-				console.log(error);
-			});
+			.catch((error) => {});
 	}
 
 	async function requestNetworkChange() {
-		console.log("requesting network change");
 		window.ethereum.request({
 			method: "wallet_addEthereumChain",
 			params: [validNetworkOptions],

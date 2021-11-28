@@ -39,7 +39,6 @@ function PostBody({
 
 	const nftMarketContext = useContext(NFTMarketContext);
 	const { creatingMarketSale, createSaleUsingSigner } = nftMarketContext;
-	console.log(owner, account, tokenId, price);
 	return (
 		<VStack
 			borderBottom="1px solid"

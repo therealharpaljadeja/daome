@@ -72,8 +72,6 @@ export const fetchItemsCreated = async (wallet) => {
 			nft.creator.profilePicUrl = sellerProfilePic;
 			// nft.isApprovedByOwner = isApprovedByOwner;
 
-			console.log(nft);
-
 			nfts.push(nft);
 		}
 	}
@@ -88,9 +86,10 @@ export const fetchMarketItems = async (wallet) => {
 		NFTMarket.abi,
 		signer
 	);
+	console.log("rpbolem");
 	let result = await nftMarketContract.fetchMarketItems();
+	console.log("rpbolem");
 	let nfts = [];
-	console.log(result);
 	for (let i = 0; i < result.length; i++) {
 		let nft = {};
 
@@ -160,7 +159,6 @@ export const fetchListedItems = async (wallet) => {
 	);
 
 	let result = await nftMarketContract.fetchListedItems(currentAddress);
-	console.log(result);
 	let nfts = [];
 
 	for (let i = 0; i < result.length; i++) {
@@ -230,7 +228,6 @@ export const fetchMyNFTs = async (wallet) => {
 	);
 	let result = await nftMarketContract.fetchMyNFTs(currentAddress);
 	let nfts = [];
-	console.log(result);
 	for (let i = 0; i < result.length; i++) {
 		let nftContract = new ethers.Contract(
 			result[i].nftContract,
@@ -338,7 +335,6 @@ export const getMarketItemByItemId = async (wallet, itemId) => {
 	);
 	let result = await nftMarketContract.getMarketItemById(itemId);
 	let nft = {};
-	console.log(result);
 	let nftContract = new ethers.Contract(result.nftContract, NFT.abi, signer);
 
 	let tokenURI = await nftContract.tokenURI(result.tokenId.toString());
@@ -385,6 +381,5 @@ export const getMarketItemByItemId = async (wallet, itemId) => {
 
 	// nft.isApprovedByOwner = isApprovedByOwner;
 
-	console.log(nft);
 	return nft;
 };

@@ -28,7 +28,6 @@ export function CreatorsContextProvider({ children }) {
 	const [userRegistered, setUserRegistered] = useState(null);
 
 	useEffect(() => {
-		console.log(chainId);
 		if (chainId === validNetworkOptions.chainId && account !== null) {
 			setCheckingUserRegistered(true);
 			const init = async () => {
@@ -47,7 +46,6 @@ export function CreatorsContextProvider({ children }) {
 	}, [account, chainId]);
 
 	useEffect(() => {
-		console.log(userRegistered);
 		if (
 			userRegistered !== null &&
 			userRegistered !== false &&
@@ -66,12 +64,10 @@ export function CreatorsContextProvider({ children }) {
 	}
 
 	useEffect(() => {
-		console.log(creatorAddress);
 		if (creatorAddress !== null && wallet !== null && provider != null) {
 			async function getCreatorObjUsingSigner() {
 				getCreatorObjFromAddress(wallet, creatorAddress, provider).then(
 					(result) => {
-						console.log(result);
 						setCreator(result);
 					}
 				);
@@ -81,11 +77,9 @@ export function CreatorsContextProvider({ children }) {
 	}, [creatorAddress]);
 
 	useEffect(() => {
-		console.log(creatorRegistered);
 		if (creatorRegistered == true) {
 			(async function () {
 				let result = await getCreatorAddressBySenderUsingSigner(wallet);
-				console.log(result);
 				setCreatorAddress(result);
 				setCreatorRegistered(false);
 				setUserRegistered(true);

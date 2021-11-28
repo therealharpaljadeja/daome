@@ -4,10 +4,13 @@ import { ethers } from "ethers";
 import { VStack, Input, Text } from "@chakra-ui/react";
 import { Web3Context } from "../context/Web3Context";
 import { NFTMarketContext } from "../context/NFTMarketContext";
+import { useHistory } from "react-router";
 
 function SellNFTModal({ isOpen, onClose, name, collectionAddress, tokenId }) {
+	const history = useHistory();
 	const [price, setPrice] = useState(0);
 	const [creatingMarketItem, setCreatingMarketItem] = useState(false);
+
 	const nftMarketContext = useContext(NFTMarketContext);
 	const { createMarketItemUsingSigner } = nftMarketContext;
 	const web3Context = useContext(Web3Context);
@@ -19,7 +22,6 @@ function SellNFTModal({ isOpen, onClose, name, collectionAddress, tokenId }) {
 
 	const handleSell = async () => {
 		let priceInWei = ethers.utils.parseUnits(price, "ether");
-		console.log("creating sale!");
 		setCreatingMarketItem(true);
 		let tx = await createMarketItemUsingSigner(
 			collectionAddress,
@@ -30,6 +32,8 @@ function SellNFTModal({ isOpen, onClose, name, collectionAddress, tokenId }) {
 		setOngoingTx(
 			`https://alfajores-blockscout.celo-testnet.org/tx/${tx.hash}`
 		);
+		await tx.wait();
+		history.push("/");
 		setCreatingMarketItem(false);
 	};
 

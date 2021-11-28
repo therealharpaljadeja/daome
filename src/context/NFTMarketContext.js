@@ -9,10 +9,12 @@ import {
 	getMarketItemByItemId,
 } from "../utils/NFTMarket";
 import { Web3Context } from "./Web3Context";
+import { useHistory } from "react-router";
 
 export const NFTMarketContext = React.createContext(null);
 
 export function NFTMarketContextProvider({ children }) {
+	const history = useHistory();
 	const web3Context = useContext(Web3Context);
 	const { wallet } = web3Context;
 
@@ -25,8 +27,8 @@ export function NFTMarketContextProvider({ children }) {
 	] = useState(null);
 
 	const [marketItems, setMarketItems] = useState(null);
-
 	const [creatingMarketSale, setCreatingMarketSale] = useState(false);
+
 	const [fetchingMyNFTs, setFetchingMyNFTs] = useState(false);
 	const [fetchingItemsCreated, setFetchingItemsCreated] = useState(false);
 
@@ -49,7 +51,6 @@ export function NFTMarketContextProvider({ children }) {
 	async function fetchMyNFTsUsingSigner() {
 		setFetchingMyNFTs(true);
 		let result = await fetchMyNFTs(wallet);
-		console.log(result);
 		setCurrentUserNFTsBoughtOnMarketplace(result);
 		setFetchingMyNFTs(false);
 	}
@@ -69,7 +70,6 @@ export function NFTMarketContextProvider({ children }) {
 			);
 			return tx;
 		} catch (e) {
-			console.log(e);
 		} finally {
 			modalCloser();
 		}
@@ -77,7 +77,9 @@ export function NFTMarketContextProvider({ children }) {
 
 	async function createSaleUsingSigner(collectionAddress, tokenId, price) {
 		setCreatingMarketSale(true);
-		await createSale(wallet, collectionAddress, tokenId, price);
+		let tx = await createSale(wallet, collectionAddress, tokenId, price);
+		await tx.wait();
+		history.push("/");
 		setCreatingMarketSale(false);
 	}
 
@@ -94,10 +96,10 @@ export function NFTMarketContextProvider({ children }) {
 				fetchingMarketItems,
 				currentUserNFTOnMarketplace,
 				currentUserNFTsBoughtOnMarketplace,
-				creatingMarketSale,
 				gettingItem,
 				fetchingMyNFTs,
 				fetchingItemsCreated,
+				creatingMarketSale,
 				marketItems,
 				fetchMarketItemsUsingSigner,
 				fetchListedItemsUsingSigner,

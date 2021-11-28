@@ -13,7 +13,6 @@ function Feed() {
 		const { fetchMarketItemsUsingSigner } = nftMarketContext;
 		fetchMarketItemsUsingSigner();
 	}, []);
-	console.log(marketItems);
 	return (
 		<VStack width="100%" alignItems="center">
 			{fetchingMarketItems === true ? (
@@ -22,7 +21,6 @@ function Feed() {
 				marketItems.length !== 0 ? (
 					<>
 						{marketItems.map((item) => {
-							console.log(item);
 							return (
 								<Post
 									nft={item}

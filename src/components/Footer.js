@@ -29,7 +29,6 @@ function Footer() {
 			<MintNFTModal
 				isOpen={isOpen}
 				onClose={() => {
-					console.log("Closed");
 					onClose();
 				}}
 			/>

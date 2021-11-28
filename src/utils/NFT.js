@@ -9,7 +9,6 @@ export const balanceOf = async (wallet, creatorAddress) => {
 	let collectionAddress = getNFTCollectionAddress(wallet, creatorAddress);
 	let nftContract = new ethers.Contract(collectionAddress, NFT.abi, signer);
 	let result = await nftContract.balanceOf(await signer.getAddress());
-	console.log(result);
 	return result;
 };
 
